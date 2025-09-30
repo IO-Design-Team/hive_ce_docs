@@ -7,5 +7,5 @@ To contribute, please open pull requests against the master branch.
 You can run a local preview of the docs by running the following command in the project folder:
 
 ```
-npx docsify serve
+npx docsify-cli serve
 ```
