@@ -7,18 +7,18 @@ Reading from a box is very straightforward:
 ```dart
 final box = Hive.box('myBox');
 
-String name = box.get('name');
+final name = box.get('name'); // String
 
-DateTime birthday = box.get('birthday');
+final birthday = box.get('birthday'); // DateTime
 ```
 
 If the key does not exist, `null` is returned. Optionally you can specify a `defaultValue` that is returned in case the key does not exist.
 
 ```dart
-double height = box.get('randomKey', defaultValue: 17.5);
+final height = box.get('randomKey', defaultValue: 17.5);
 ```
 
-Lists returned by `get()` are always of type `List<dynamic>` \(Maps of type `Map<dynamic, dynamic>`\). Use `list.cast<SomeType>()` to cast them to a specific type.
+Iterables of types other than `int`, `double`, `bool`, or `String` returned by `get()` are always of type `Iterable<dynamic>` \(Maps of type `Map<dynamic, dynamic>`\). Use `iterable.cast<SomeType>()` to cast them to a specific type.
 
 ## Every object only exists once
 
