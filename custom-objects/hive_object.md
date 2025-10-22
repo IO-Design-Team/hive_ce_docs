@@ -9,9 +9,9 @@ import 'package:hive_ce/hive.dart';
 
 void main() async {
   Hive.registerAdapter(PersonAdapter());
-  var persons = await Hive.openBox('persons');
+  final persons = await Hive.openBox('persons');
 
-  var person = Person()
+  final person = Person()
     ..name = 'Lisa';
 
   persons.add(person); // Store this object for the first time

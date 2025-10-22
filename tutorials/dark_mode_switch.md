@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: Hive.box(darkModeBox).listenable(),
       builder: (context, box, widget) {
-        var darkMode = box.get('darkMode', defaultValue: false);
+        final darkMode = box.get('darkMode', defaultValue: false);
         return MaterialApp(
           themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
           darkTheme: ThemeData.dark(),
@@ -153,7 +153,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var darkMode = box.get('darkMode', defaultValue: false);
+    final darkMode = box.get('darkMode', defaultValue: false);
     return MaterialApp(
       themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
       darkTheme: ThemeData.dark(),
@@ -199,7 +199,7 @@ class MyApp extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: Hive.box(darkModeBox).listenable(),
       builder: (context, box, widget) {
-        var darkMode = box.get('darkMode', defaultValue: false);
+        final darkMode = box.get('darkMode', defaultValue: false);
         return MaterialApp(
           themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
           darkTheme: ThemeData.dark(),

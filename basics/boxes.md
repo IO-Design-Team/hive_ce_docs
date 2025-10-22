@@ -9,7 +9,7 @@ For a small app, a single box might be enough. For more advanced problems, boxes
 Before you can use a box, you have to open it. For regular boxes, this loads all of its data from the local storage into memory for immediate access.
 
 ```dart
-var box = await Hive.openBox<E>('testBox');
+final box = await Hive.openBox<E>('testBox');
 ```
 
 | Parameter          | Description                                                                                                                                                                                                       |
@@ -32,7 +32,7 @@ Once you obtained a box instance, you can read, write, and delete entries.
 Hive stores a reference to all open boxes. If you want to get an already opened box, you can use
 
 ```dart
-var box = Hive.box('myBox');
+final box = Hive.box('myBox');
 ```
 
 This method is especially useful for Flutter apps because you don't need to pass the box between widgets.
@@ -44,7 +44,7 @@ If you don't need a box again, you should close it. All cached keys and values o
 ?> It is perfectly fine to leave a box open for the runtime of the app. If you need a box again in the future, just leave it open.
 
 ```dart
-var box = await Hive.openBox('myBox');
+final box = await Hive.openBox('myBox');
 await box.put('hello', 'world');
 await box.close();
 ```
@@ -56,7 +56,7 @@ Before your application exits, you should call `Hive.close()` to close all open 
 When you open a box, you can specify that it may only contain values of a specific type. For example a user box could be opened like this:
 
 ```dart
-var box = await Hive.openBox<User>('users');
+final box = await Hive.openBox<User>('users');
 
 box.add(User());
 

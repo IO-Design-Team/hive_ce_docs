@@ -47,7 +47,7 @@ class ColoredPath {
   Paint get paint {
     if (_paints == null) {
       _paints = [];
-      for (var color in colors) {
+      for (final color in colors) {
         _paints.add(
           Paint()
             ..strokeCap = StrokeCap.round
@@ -85,8 +85,8 @@ class ColoredPathAdapter extends TypeAdapter<ColoredPath> {
 
   @override
   ColoredPath read(BinaryReader reader) {
-    var path = ColoredPath(reader.readByte());
-    var len = reader.readUint32();
+    final path = ColoredPath(reader.readByte());
+    final len = reader.readUint32();
     for (var i = 0; i < len; i++) {
       path.addPoint(Offset(reader.readDouble(), reader.readDouble()));
     }
@@ -97,7 +97,7 @@ class ColoredPathAdapter extends TypeAdapter<ColoredPath> {
   void write(BinaryWriter writer, ColoredPath obj) {
     writer.writeByte(obj.colorIndex);
     writer.writeUint32(obj.points.length);
-    for (var point in obj.points) {
+    for (final point in obj.points) {
       writer.writeDouble(point.dx);
       writer.writeDouble(point.dy);
     }
@@ -145,7 +145,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
       BuildContext context, Box<ColoredPath> box, Widget child) {
     return Stack(
       children: <Widget>[
-        for (var path in box.values)
+        for (final path in box.values)
           CustomPaint(
             size: Size.infinite,
             painter: PathPainter(path),
@@ -155,7 +155,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
   }
 
   Widget buildColorCircle(int colorIndex) {
-    var selected = selectedColorIndex == colorIndex;
+    final selected = selectedColorIndex == colorIndex;
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -210,7 +210,7 @@ class _DrawingAreaState extends State<DrawingArea> {
   }
 
   void addPoint(Offset point) {
-    var renderBox = context.findRenderObject() as RenderBox;
+    final renderBox = context.findRenderObject() as RenderBox;
     setState(() {
       path.addPoint(renderBox.globalToLocal(point));
     });

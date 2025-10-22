@@ -32,7 +32,7 @@ void main() async {
   // Register Adapter
   Hive.registerAdapter(UserAdapter());
 
-  var box = await Hive.openBox<User>('userBox');
+  final box = await Hive.openBox<User>('userBox');
 
   box.put('david', User('David'));
   box.put('sandy', User('Sandy'));

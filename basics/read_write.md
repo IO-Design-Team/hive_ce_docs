@@ -5,7 +5,7 @@
 Reading from a box is very straightforward:
 
 ```dart
-var box = Hive.box('myBox');
+final box = Hive.box('myBox');
 
 String name = box.get('name');
 
@@ -30,12 +30,12 @@ Here is an example:
 import 'package:hive_ce/hive.dart';
 
 void main() async {
-  var box = await Hive.openBox('someBox');
+  final box = await Hive.openBox('someBox');
 
-  var initialList = ['a', 'b', 'c'];
+  final initialList = ['a', 'b', 'c'];
   box.put('myList', initialList);
 
-  var myList = box.get('myList');
+  final myList = box.get('myList');
   myList[0] = 'd';
 
   print(initialList[0]); // d
@@ -51,7 +51,7 @@ In the sample above, only the cached object has been changed and not the underly
 Writing to a box is almost like writing to a map. All keys have to be ASCII Strings with a max length of 255 chars or unsigned 32 bit integers.
 
 ```dart
-var box = Hive.box('myBox');
+final box = Hive.box('myBox');
 
 box.put('name', 'Paul');
 
@@ -71,14 +71,14 @@ This works differently for [lazy boxes](../advanced/lazy_box.md): As long as the
 The following code shows the difference:
 
 ```dart
-var box = await Hive.openBox('box');
+final box = await Hive.openBox('box');
 
 box.put('key', 'value');
 print(box.get('key')); // value
 
-var lazyBox = await Hive.openLazyBox('lazyBox');
+final lazyBox = await Hive.openLazyBox('lazyBox');
 
-var future = lazyBox.put('key', 'value');
+final future = lazyBox.put('key', 'value');
 print(lazyBox.get('key')); // null
 
 await future;
@@ -93,7 +93,7 @@ If you want to change an existing value, you can either override it using for ex
 import 'package:hive_ce/hive.dart';
 
 void main() async {
-  var box = await Hive.openBox('deleteExample');
+  final box = await Hive.openBox('deleteExample');
 
   box.putAll({'key1': 'good', 'key2':'evil'});
   print(box.values);
@@ -113,7 +113,7 @@ Writing `null` is **NOT** the same as deleting a value.
 import 'package:hive_ce/hive.dart';
 
 void main() async {
-  var box = await Hive.openBox('writeNullBox');
+  final box = await Hive.openBox('writeNullBox');
 
   box.put('key', 'value');
 

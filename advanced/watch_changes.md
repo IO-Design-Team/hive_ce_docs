@@ -8,7 +8,7 @@ In Flutter apps you can rebuild widgets every time the box changes.
 import 'package:hive_ce/hive.dart';
 
 void main() async {
-  var box = await Hive.openBox('watchChangesBox');
+  final box = await Hive.openBox('watchChangesBox');
 
   box.watch().listen((event) {
     if (event.deleted) {

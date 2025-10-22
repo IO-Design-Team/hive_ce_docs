@@ -6,7 +6,7 @@ We already know that Hive supports unsigned integer keys. You can use auto-incre
 import 'package:hive_ce/hive.dart';
 
 void main() async {
-  var friends = await Hive.openBox('friends');
+  final friends = await Hive.openBox('friends');
   friends.clear();
 
   friends.add('Lisa');            // index 0, key 0

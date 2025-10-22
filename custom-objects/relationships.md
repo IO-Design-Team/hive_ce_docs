@@ -25,12 +25,12 @@ import 'package:hive_ce/hive.dart';
 
 void main() async {
   Hive.registerAdapter(PersonAdapter());
-  var persons = await Hive.openBox<Person>('personsWithLists');
+  final persons = await Hive.openBox<Person>('personsWithLists');
   persons.clear();
 
-  var mario = Person('Mario');
-  var luna = Person('Luna');
-  var alex = Person('Alex');
+  final mario = Person('Mario');
+  final luna = Person('Luna');
+  final alex = Person('Alex');
   persons.addAll([mario, luna, alex]);
 
   mario.friends = HiveList(persons); // Create a HiveList

@@ -21,7 +21,7 @@ If you want to store a big list which is updated frequently \(for example, a lis
 You can easily filter items in your box. For example:
 
 ```dart
-var filteredUsers = userBox.values.where((user) => user.name.startsWith('s'));
+final filteredUsers = userBox.values.where((user) => user.name.startsWith('s'));
 ```
 
 It might be a good idea to cache the result to improve performance.
