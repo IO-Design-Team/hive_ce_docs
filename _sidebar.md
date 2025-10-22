@@ -41,4 +41,5 @@
   - [Limitations](more/limitations.md)
 
 - Deprecated
+  - [Deprecation Policy](deprecated/deprecation_policy.md)
   - [ValueListenable](deprecated/value_listenable.md)

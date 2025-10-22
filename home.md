@@ -1,3 +1,5 @@
+# Quick Start
+
 ## Add to project
 
 Add the following to your `pubspec.yaml`:
