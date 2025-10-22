@@ -1,97 +1,99 @@
 # Generate adapter
 
-The [hive_ce_generator](https://pub.dev/packages/hive_ce_generator) package can automatically generate `TypeAdapter`s for almost any class.
+The [hive_ce_generator](https://pub.dev/packages/hive_ce_generator) package can automatically generate `TypeAdapter`s for almost any class. You can even generate adapters for external packages such as a generated OpenAPI client.
 
-1. To generate a `TypeAdapter` for a class, annotate it with `@HiveType` and provide a `typeId` (between 0 and 223)
-2. Annotate all fields which should be stored with `@HiveField`
-3. Run build task `dart run build_runner build`
-4. [Register](custom-objects/type_adapters.md) the generated adapter
+1. To generate `TypeAdapter`s for classes, create the file `lib/hive/hive_adapters.dart`
+2. Create a `GenerateAdapters` annotation and add `AdapterSpec`s for each class you want to generate an adapter for
+3. Run the build task `dart run build_runner build`
+4. Register the generated adapters by calling the generated `Hive.registerAdapters()` method
+
+## Generated files
+
+### hive_adapters.g.dart
+
+This file contains the generated adapter classes.
+
+### hive_adapters.g.yaml
+
+The Hive schema is a generated yaml file that contains the information necessary to incrementally update the generated TypeAdapters as your model classes evolve.
+
+!> There will be a lot of churn in this file during initial development. Make sure to delete `hive_adapters.g.yaml` and regenerate before the first real deployment of your application to reclaim unused field indices.
+
+Some migrations may require manual modifications to the Hive schema file. One example is class/field renaming. Without manual intervention, the generator will see both an added and removed class/field. To resolve this, manually rename the class/field in the schema.
+
+### hive_registrar.g.dart
+
+This file contains an extension method to register all generated adapters.
 
 ### Example
 
-Given a library `person.dart` with a `Person` class annotated with `@HiveType` with a **unique** `typeId` argument:
+Model class:
 
 ```dart
-import 'package:hive_ce/hive.dart';
-
-part 'person.g.dart';
-
-@HiveType(typeId: 1)
 class Person {
-  @HiveField(0)
-  String name;
+  final String name;
+  final int age;
+  final List<Person> friends;
 
-  @HiveField(1)
-  int age;
-
-  @HiveField(2)
-  List<Person> friends;
+  const Person({
+    required this.name,
+    required this.age,
+    required this.friends,
+  });
 }
 ```
 
-As you can see, each field annotated with `@HiveField` has a **unique** number \(unique per class\). These field numbers are used to identify the fields in the Hive binary format, and should not be changed once your class is in use.
+`lib/hive/hive_adapters.dart`:
 
-_Field numbers can be in the range 0-255_.
+```dart
+import 'package:hive_ce/hive.dart';
+import 'person.dart';
 
-The above code generates an adapter class called `PersonAdapter`. You can change that name with the optional `adapterName` parameter of `@HiveType`.
+@GenerateAdapters([AdapterSpec<Person>()])
+part 'hive_adapters.g.dart';
+```
+
+Adapter registration:
+
+```dart
+import 'package:hive_ce/hive.dart';
+import 'package:your_package/hive/hive_registrar.g.dart';
+
+void main() {
+  Hive
+    ..init('.')
+    ..registerAdapters();
+}
+```
+
+The above code generates and registers an adapter class called `PersonAdapter`.
 
 ## Updating a class
 
 If an existing class needs to be changed – for example, you'd like the class to have a new field – but you'd still like to read objects written with the old adapter, don't worry! It is straightforward to update generated adapters without breaking any of your existing code. Just remember the following rules:
 
-- Don't change the field numbers for any existing fields.
 - If you add new fields, any objects written by the "old" adapter can still be read by the new adapter. These fields are just ignored. Similarly, objects written by your new code can be read by your old code: the new field is ignored when parsing.
-- Fields can be renamed and even changed from public to private or vice versa as long as the field number stays the same.
-- Fields can be removed, as long as the field number is not used again in your updated class.
+- Fields can be renamed, but this requires manually modifying the field key in the `hive_adapters.g.yaml` file
+- Fields can be removed
 - Changing the type of a field is not supported. You should create a new one instead.
-- You have to provide `defaultValue` for new non-nullable fields after enabling null safety.
+- You have to provide a default value in the constructor for new non-nullable fields
 
 ## Enums
 
-Generating an adapter for enums works almost as it does for classes:
-
-```dart
-@HiveType(typeId: 2)
-enum HairColor {
-  @HiveField(0)
-  brown,
-
-  @HiveField(1)
-  blond,
-
-  @HiveField(2)
-  black,
-}
-```
+Generating an adapter for enums works exactly as it does for classes.
 
 For updating the enum, the same rules apply as above.
 
 ## Default value
 
-You can provide default values to properties and fields by providing `defaultValue` argument to `@HiveField` annotation.
+You can provide default values to properties and fields by providing a default value in the constructor.
 
 ```dart
-@HiveType(typeId: 2)
 class Customer {
-  @HiveField(1, defaultValue: 0.0)
-  double balance;
-}
-```
+  final double balance;
 
-!> Default values for custom types were introduced after `hive: 2.0.4` and `hive_generator: 1.1.0`.
-
-You can also provide default value for enum types by setting `defaultValue` to `true`. If you have not set default value for enum types, the first value will be used as default value.
-
-```dart
-@HiveType(typeId: 2)
-enum HairColor {
-  @HiveField(0)
-  brown,
-
-  @HiveField(1)
-  blond,
-
-  @HiveField(2, defaultValue: true)
-  black,
+  const Customer({
+    this.balance = 0,
+  });
 }
 ```
