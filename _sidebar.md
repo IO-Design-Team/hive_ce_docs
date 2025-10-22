@@ -10,7 +10,7 @@
 - Custom Objects
 
   - [TypeAdapters](custom-objects/type_adapters.md)
-  - [Generate adapter](custom-objects/generate_adapter.md)
+  - [Generate adapters](custom-objects/generate_adapters.md)
   - [HiveObject](custom-objects/hive_object.md)
   - [Relationships](custom-objects/relationships.md)
   - [Create adapter manually](custom-objects/create_adapter_manually.md)
@@ -43,3 +43,4 @@
 - Deprecated
   - [Deprecation Policy](deprecated/deprecation_policy.md)
   - [ValueListenable](deprecated/value_listenable.md)
+  - [HiveType annotations](deprecated/hive_type_annotations.md)
