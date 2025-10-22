@@ -1,3 +1,5 @@
+!> If you feel the need to create a custom `TypeAdapter`, please [create an issue on GitHub](https://github.com/IO-Design-Team/hive_ce/issues) to discuss your use case.
+
 # Create adapter manually
 
 Sometimes it might be necessary to create a custom `TypeAdapter`. You can do that by extending the `TypeAdapter` class. Make sure to specify the generic argument.
