@@ -1,12 +1,12 @@
 # TypeAdapters
 
-Hive supports all primitive types, `List`, `Map`, `DateTime` and `Uint8List`. If you want to store other objects, you have to register a `TypeAdapter` which converts the object from and to binary form.
+Hive supports all primitive types, `List`, `Set`, `Map`, `DateTime`, `Duration`, `BigInt` and `Uint8List`. If you want to store other objects, you have to register a `TypeAdapter` which converts the object from and to binary form.
 
-You can either write a `TypeAdapter` yourself or generate it. Most of the time the generated adapter will perform really good. Sometimes there are small things you can improve with a manually written adapter.
+You can either write a `TypeAdapter` yourself or generate it. Some features require generated adapters. Avoid manually writing adapters if possible.
 
 ## Register Adapter
 
-When you want Hive to use a `TypeAdapter`, you have to register it. Two things are needed for that: An instance of the adapter and a `typeId`. Every type has a unique `typeId` which is used to find the correct adapter when a value is brought back from disk. All `typeId`s between 0 and 223 are allowed.
+When you want Hive to use a `TypeAdapter`, you have to register it. Two things are needed for that: An instance of the adapter and a `typeId`. Every type has a unique `typeId` which is used to find the correct adapter when a value is brought back from disk. All `typeId`s between 0 and 65,439 are allowed.
 
 ```dart
 Hive.registerAdapter(MyObjectAdapter());
@@ -20,9 +20,9 @@ Hive.registerAdapter(MyObjectAdapter());
 import 'package:hive_ce/hive.dart';
 
 class User {
-  String name;
+  final String name;
 
-  User(this.name);
+  const User(this.name);
 
   @override
   String toString() => name; // Just for print()
