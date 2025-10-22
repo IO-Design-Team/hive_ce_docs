@@ -57,9 +57,7 @@ When you open a box, you can specify that it may only contain values of a specif
 
 ```dart
 final box = await Hive.openBox<User>('users');
-
 box.add(User());
-
 box.add(5); // Compile time error
 ```
 
@@ -76,4 +74,4 @@ Hive.box('users'); // ERROR
 Hive.box<Dog>('users'); // ERROR
 ```
 
-!> Generic type parameters like Box<List<int>> are unsupported due to Dart limitations.
+!> Iterables and maps of custom types like `Box<List<User>>` are unsupported due to Dart limitations.
