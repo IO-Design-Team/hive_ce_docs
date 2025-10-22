@@ -27,33 +27,24 @@ await Hive.initFlutter();
 All of your data is stored in boxes.
 
 ```dart
-var box = await Hive.openBox('testBox');
+final box = await Hive.openBox('testBox');
 ```
 
 ?> You may call `box('testBox')` to get the singleton instance of an already opened box.
 
 ## Read & Write
 
-Hive supports all primitive types, `List`, `Map`, `DateTime`, `BigInt` and `Uint8List`. Any object can be stored using [TypeAdapters](custom-objects/generate_adapter.md).
+Hive supports all primitive types, `List`, `Set`, `Map`, `DateTime`, `Duration`, `BigInt` and `Uint8List`. Any object can be stored using [TypeAdapters](custom-objects/generate_adapter.md).
 
-```dart:dart:300px
+```dart
 import 'package:hive_ce/hive.dart';
 
 void main() async {
-  //Hive.init('somePath') -> not needed in browser
+  Hive.init('somePath') // not needed in browser
 
-  var box = await Hive.openBox('testBox');
-
+  final box = await Hive.openBox('testBox');
   box.put('name', 'David');
 
   print('Name: ${box.get('name')}');
 }
 ```
-
-## Video Tutorial
-
-Learn the basics of using Hive in this well-made tutorial by Reso Coder.
-
-<div class="container">
-  <iframe id="ytplayer" type="text/html" data-src="https://www.youtube.com/embed/R1GSrrItqUs" class="video"/>
-</div>
