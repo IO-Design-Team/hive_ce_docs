@@ -31,4 +31,3 @@ The `read()` method is called when your object has to be read from the disk. Use
 The `write()` method is the same just for writing the object to the disk.
 
 ?> Make sure, you read properties in the same order you have written them before.
-

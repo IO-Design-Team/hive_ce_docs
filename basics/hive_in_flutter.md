@@ -6,7 +6,7 @@ Hive supports all platforms supported by Flutter.
 
 Before you can open a box, Hive needs to know where it can store its data. Android and iOS have very strict rules for allowed directories. You can use the `path_provider` package to get a valid directory.
 
-The `hive_flutter` package provides the `Hive.initFlutter()` extension method which handles everything for you.
+The `hive_ce_flutter` package provides the `Hive.initFlutter()` extension method which handles everything for you.
 
 ## ValueListenable
 
@@ -15,8 +15,8 @@ If you want your widgets to refresh based on the data stored in Hive, you can us
 ```dart:flutter:600px
 import 'package:flutter/material.dart';
 
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 void main() async {
   await Hive.initFlutter();

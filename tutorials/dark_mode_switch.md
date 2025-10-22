@@ -12,8 +12,8 @@ Below you can find the final code and test the app.
 
 ```dart:flutter:500px
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 const darkModeBox = 'darkModeTutorial';
 
@@ -66,13 +66,13 @@ Now we need to add Hive to the `pubspec.yaml` file in the project folder:
 name: dark_mode_switch
 
 environment:
-  sdk: ">=2.6.0 <3.0.0"
+  sdk: ^3.0.0
 
 dependencies:
   flutter:
     sdk: flutter
-  hive: ^1.3.0
-  hive_flutter: ^0.3.0+1
+  hive_ce: ^1.3.0
+  hive_ce_flutter: ^0.3.0+1
 
 flutter:
   uses-material-design: true
@@ -80,12 +80,12 @@ flutter:
 
 ## Initialization
 
-Now we can import `hive` and `hive_flutter` to initialize Hive.
+Now we can import `hive_ce` and `hive_ce_flutter` to initialize Hive.
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 const darkModeBox = 'darkModeTutorial';
 
@@ -100,7 +100,7 @@ void main() async {
 
 ## Structure of the app
 
-The following is the main structure of our app. A Material themed app with a single `Switch` in the center. 
+The following is the main structure of our app. A Material themed app with a single `Switch` in the center.
 
 ```dart:flutter:500px
 import 'package:flutter/material.dart';
@@ -137,8 +137,8 @@ When the user toggles the switch, we update the `darkMode` entry in the box.
 
 ```dart:flutter:700px
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 const darkModeBox = 'darkModeTutorial';
 
@@ -178,12 +178,12 @@ When you run the example, you will notice that it does not work as intended. The
 
 ## Refreshing
 
-The last step is to refresh the app when necessary. The easiest way to refresh  widgets based on Hive changes is using `box.listenable()` and `ValueListenableBuilder`.
+The last step is to refresh the app when necessary. The easiest way to refresh widgets based on Hive changes is using `box.listenable()` and `ValueListenableBuilder`.
 
 ```dart:flutter:700px
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 const darkModeBox = 'darkModeTutorial';
 

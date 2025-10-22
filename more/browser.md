@@ -5,4 +5,3 @@ Hive works in the browser exactly the same as in the VM. The only difference is 
 You should be aware that it is easier for the users to view or change your boxes in the browser than on mobile phones \(for example, using Chrome DevTools\). You can use an encrypted box to prevent reading it.
 
 All `TypeAdapters` work as usual.
-

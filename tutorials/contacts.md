@@ -8,7 +8,7 @@ We will be using model classes and enums, all of which Hive can store in it's da
 
 ## Source Code & Live Test
 
-Here's the source: https://github.com/hivedb/samples/tree/master/contacts
+Here's the source: https://github.com/IO-Design-Team/hive_ce_samples/tree/master/contacts
 
 Below you can find the final code and test the app.
 
@@ -16,8 +16,8 @@ Below you can find the final code and test the app.
 
 ```dart:flutter:500px
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
 
 const String contactsBoxName = "contacts";
 
@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
                 String relationship =
                     relationshipString[currentContact.relationship];
                 return Card(
-                  clipBehavior: Clip.antiAlias, 
+                  clipBehavior: Clip.antiAlias,
                   child: InkWell(
                     onLongPress: () {
                       showDialog(
@@ -326,13 +326,13 @@ Now, we need to define our dependencies. We will be using `dev_dependencies` to 
 
 ```yaml
 environment:
-  sdk: '>=2.6.0 <3.0.0'
+  sdk: ^3.0.0
 
 dependencies:
   flutter:
     sdk: flutter
-  hive: ^1.3.0
-  hive_flutter: ^0.3.0+1
+  hive_ce: ^1.3.0
+  hive_ce_flutter: ^0.3.0+1
 
 dev_dependencies:
   hive_generator: ^0.7.0
@@ -461,7 +461,7 @@ class MyApp extends StatelessWidget {
                 String relationship =
                     relationshipString[currentContact.relationship];
                 return Card(
-                  clipBehavior: Clip.antiAlias, 
+                  clipBehavior: Clip.antiAlias,
                   child: InkWell(
                     onLongPress: () { /* ... */ },
                     child: Padding(

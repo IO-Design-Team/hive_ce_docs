@@ -5,7 +5,7 @@ When you store custom objects in Hive you can extend `HiveObject` to manage your
 Here is an example how to use `HiveObject`:
 
 ```dart:dart:650px
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 void main() async {
   Hive.registerAdapter(PersonAdapter());
@@ -52,4 +52,3 @@ class PersonAdapter extends TypeAdapter<Person> {
 ```
 
 ?> You also need to extend `HiveObject` if you want to use queries.
-

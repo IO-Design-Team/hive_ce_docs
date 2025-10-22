@@ -17,7 +17,7 @@ Hive.registerAdapter(MyObjectAdapter());
 ?> It's recommended to register all `TypeAdapter`s before opening any boxes.
 
 ```dart:dart:500px
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 class User {
   String name;
@@ -30,7 +30,7 @@ class User {
 
 void main() async {
   // Register Adapter
-  Hive.registerAdapter(UserAdapter()); 
+  Hive.registerAdapter(UserAdapter());
 
   var box = await Hive.openBox<User>('userBox');
 

@@ -15,4 +15,3 @@ To get an already opened lazy box call:
 ```dart
 var lazyBox = Hive.lazyBox('myLazyBox');
 ```
-

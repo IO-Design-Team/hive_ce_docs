@@ -5,11 +5,11 @@ Sometimes your models are connected with each other. The following person class 
 ```dart
 class Person extends HiveObject {
   String name;
-  
+
   int age;
-  
+
   List<Person> friends;
-  
+
   Person(this.name, this.age);
 }
 ```
@@ -21,23 +21,23 @@ You could just use a regular list to store the persons, but updating a person wo
 HiveLists provide an easy way to solve the problem above. They allow you to store a "link" to the actual object.
 
 ```dart:dart:500px
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 void main() async {
   Hive.registerAdapter(PersonAdapter());
   var persons = await Hive.openBox<Person>('personsWithLists');
   persons.clear();
-  
+
   var mario = Person('Mario');
   var luna = Person('Luna');
   var alex = Person('Alex');
   persons.addAll([mario, luna, alex]);
-  
+
   mario.friends = HiveList(persons); // Create a HiveList
   mario.friends.addAll([luna, alex]); // Update Mario's friends
   mario.save(); // make persistent the change,
   print(mario.friends);
-  
+
   luna.delete(); // Remove Luna from Hive
   print(mario.friends); // HiveList updates automatically
 }
@@ -77,4 +77,3 @@ First, we store the three persons, Mario, Luna, and Alex in the `persons` box. H
 Next, we create a `HiveList` which contains Mario's friends. The `HiveList` constructor needs the `HiveObject`, which will contain the list. The list must not be moved to another `HiveObject`. The second parameter is the box, which contains the items of the list.
 
 When you delete an object from a box, it is also deleted from all `HiveLists`. If you delete an object from a `HiveList`, it still remains in the box.
-

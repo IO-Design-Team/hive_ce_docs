@@ -6,7 +6,7 @@ In this tutorial we will build a simple app which stores the user's favorite boo
 
 ## Source Code & Live Test
 
-Here's the source: https://github.com/hivedb/samples/tree/master/favorite_books
+Here's the source: https://github.com/IO-Design-Team/hive_ce_samples/tree/master/favorite_books
 
 Below you can find the final code and test the app.
 
@@ -14,8 +14,8 @@ Below you can find the final code and test the app.
 
 ```dart:flutter:500px
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 const favoritesBox = 'favorite_books';
 const List<String> books = [
@@ -117,19 +117,19 @@ flutter create favorite_books
 
 ## Dependencies
 
-We can then go ahead and add `hive` and `hive_flutter` to the `pubspec.yaml` file in the project folder:
+We can then go ahead and add `hive_ce` and `hive_ce_flutter` to the `pubspec.yaml` file in the project folder:
 
 ```yaml
 name: favorite_books
 
 environment:
-  sdk: '>=2.6.0 <3.0.0'
+  sdk: ^3.0.0
 
 dependencies:
   flutter:
     sdk: flutter
-  hive: ^1.2.0
-  hive_flutter: ^0.3.0+1
+  hive_ce: ^1.2.0
+  hive_ce_flutter: ^0.3.0+1
 
 flutter:
   uses-material-design: true
@@ -141,8 +141,8 @@ I've defined a `const` variable to hold our `Box` name. Inside the `main()` func
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 const favoritesBox = 'favorite_books';
 

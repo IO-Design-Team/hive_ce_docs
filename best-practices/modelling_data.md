@@ -25,4 +25,3 @@ var filteredUsers = userBox.values.where((user) => user.name.startsWith('s'));
 ```
 
 It might be a good idea to cache the result to improve performance.
-

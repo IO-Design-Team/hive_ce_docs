@@ -8,7 +8,7 @@ Just pass the key when you open a box:
 
 ```dart:dart:400px
 import 'dart:convert';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() async {
@@ -31,13 +31,9 @@ void main() async {
 }
 ```
 
-
-!> The example above stores the encryption key using the [flutter\_secure\_storage](https://pub.dev/packages/flutter_secure_storage) package, but you can use any package/method you prefer for securely storing the encryption key when your application is closed.
-
+!> The example above stores the encryption key using the [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage) package, but you can use any package/method you prefer for securely storing the encryption key when your application is closed.
 
 ## Important:
-* Only values are encrypted while keys are stored in plaintext.
-* There is no check if the encryption key is correct. If it isn't, there may be unexpected behavior.
 
-
-
+- Only values are encrypted while keys are stored in plaintext.
+- There is no check if the encryption key is correct. If it isn't, there may be unexpected behavior.

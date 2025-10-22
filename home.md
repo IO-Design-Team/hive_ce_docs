@@ -8,14 +8,13 @@ Add the following to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  hive: ^[version]
-  hive_flutter: ^[version]
+  hive_ce: ^[version]
+  hive_ce_flutter: ^[version]
 
 dev_dependencies:
-  hive_generator: ^[version]
+  hive_ce_generator: ^[version]
   build_runner: ^[version]
 ```
-
 
 ## Initialize
 
@@ -42,7 +41,7 @@ var box = await Hive.openBox('testBox');
 Hive supports all primitive types, `List`, `Map`, `DateTime`, `BigInt` and `Uint8List`. Any object can be stored using [TypeAdapters](custom-objects/generate_adapter.md).
 
 ```dart:dart:300px
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 void main() async {
   //Hive.init('somePath') -> not needed in browser
@@ -50,7 +49,7 @@ void main() async {
   var box = await Hive.openBox('testBox');
 
   box.put('name', 'David');
-  
+
   print('Name: ${box.get('name')}');
 }
 ```
@@ -62,4 +61,3 @@ Learn the basics of using Hive in this well-made tutorial by Reso Coder.
 <div class="container">
   <iframe id="ytplayer" type="text/html" data-src="https://www.youtube.com/embed/R1GSrrItqUs" class="video"/>
 </div>
-

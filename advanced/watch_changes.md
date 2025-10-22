@@ -5,7 +5,7 @@ If you want to get notified about changes in a box, you can subscribe to the `St
 In Flutter apps you can rebuild widgets every time the box changes.
 
 ```dart:dart:350px
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 void main() async {
   var box = await Hive.openBox('watchChangesBox');
@@ -30,4 +30,3 @@ box.watch(key: 'someKey').listen((event) {
     // ...
 });
 ```
-

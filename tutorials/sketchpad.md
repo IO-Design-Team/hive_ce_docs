@@ -4,7 +4,7 @@ This tutorial shows you how to make a sketchpad app from scratch! You can draw a
 
 ## Source Code & Live Test
 
-Here's the source: https://github.com/hivedb/samples/tree/master/sketchpad
+Here's the source: https://github.com/IO-Design-Team/hive_ce_samples/tree/master/sketchpad
 
 Below you can find the final code and test the app.
 
@@ -12,8 +12,8 @@ Below you can find the final code and test the app.
 
 ```dart:flutter:500px
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
 
 const sketchBox = 'sketchpadBox';
 
@@ -273,19 +273,19 @@ flutter create sketchpad
 
 ## Dependencies
 
-We can then go ahead and add `hive` and `hive_flutter` to the `pubspec.yaml` file in the project folder:
+We can then go ahead and add `hive_ce` and `hive_ce_flutter` to the `pubspec.yaml` file in the project folder:
 
 ```yaml
 name: sketchpad
 
 environment:
-  sdk: '>=2.6.0 <3.0.0'
+  sdk: ^3.0.0
 
 dependencies:
   flutter:
     sdk: flutter
-  hive: ^1.3.0
-  hive_flutter: ^0.3.0+1
+  hive_ce: ^1.3.0
+  hive_ce_flutter: ^0.3.0+1
 
 flutter:
   uses-material-design: true
@@ -297,8 +297,8 @@ We need to initialize Hive and the `TypeAdapters`.
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
 
 const sketchBox = 'sketchpadBox';
 

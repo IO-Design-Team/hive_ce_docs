@@ -3,7 +3,7 @@
 We already know that Hive supports unsigned integer keys. You can use auto-increment keys if you like. This is very useful for storing and accessing multiple objects. You can use a Box like a list.
 
 ```dart:dart:400px
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 void main() async {
   var friends = await Hive.openBox('friends');
@@ -16,13 +16,13 @@ void main() async {
 
   print(friends.getAt(0));
   print(friends.get(0));
-  
+
   print(friends.getAt(1));
   print(friends.get(1));
-  
+
   print(friends.getAt(2));
   print(friends.get(123));
-  
+
   print(friends.getAt(3));
   print(friends.get(124));
 }
@@ -33,4 +33,3 @@ There are also `getAt()`, `putAt()` and `deleteAt()` methods to access or change
 By default, String keys are sorted lexicographically and they have also indices.
 
 ?> Even if you only use auto increment keys, you should not rely on keys and indices being the same.
-

@@ -14,28 +14,28 @@ It is very easy to add Hive snippets to VSCode:
 
 ## Usage
 
-* Create a dart file `example.dart`
-* Enter one of the commands below
-* With `tab` you can navigate the input positions
+- Create a dart file `example.dart`
+- Enter one of the commands below
+- With `tab` you can navigate the input positions
 
-| Command | Action |
-| :--- | :--- |
-| `hive` | Creates the basic structure of a Hive model and extends `HiveObject`. |
-| `hivec` | Creates the basic structure of a Hive model. |
-| `hf` | Creates a `HiveField()` annotation. |
-| `ht` | Creates a `HiveType()` annotation. |
-| `hfs` | Creates a String Hive field. |
-| `hfi` | Creates an int Hive field. |
-| `hfb` | Creates a bool Hive field. |
-| `hfl` | Creates a List Hive field. |
-| `hfd` | Creates a double Hive field. |
+| Command | Action                                                                |
+| :------ | :-------------------------------------------------------------------- |
+| `hive`  | Creates the basic structure of a Hive model and extends `HiveObject`. |
+| `hivec` | Creates the basic structure of a Hive model.                          |
+| `hf`    | Creates a `HiveField()` annotation.                                   |
+| `ht`    | Creates a `HiveType()` annotation.                                    |
+| `hfs`   | Creates a String Hive field.                                          |
+| `hfi`   | Creates an int Hive field.                                            |
+| `hfb`   | Creates a bool Hive field.                                            |
+| `hfl`   | Creates a List Hive field.                                            |
+| `hfd`   | Creates a double Hive field.                                          |
 
 ```javascript
 {
   "HiveType class extends HiveObject": {
     "prefix": "hive",
     "body": [
-      "import 'package:hive/hive.dart';",
+      "import 'package:hive_ce/hive.dart';",
       "",
       "part '${TM_FILENAME_BASE}.g.dart';",
       "",
@@ -51,7 +51,7 @@ It is very easy to add Hive snippets to VSCode:
   "HiveType class": {
     "prefix": "hivc",
     "body": [
-      "import 'package:hive/hive.dart';",
+      "import 'package:hive_ce/hive.dart';",
       "",
       "part '${TM_FILENAME_BASE}.g.dart';",
       "",
@@ -128,4 +128,3 @@ It is very easy to add Hive snippets to VSCode:
   }
 }
 ```
-

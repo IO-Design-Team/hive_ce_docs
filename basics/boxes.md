@@ -12,16 +12,16 @@ Before you can use a box, you have to open it. For regular boxes, this loads all
 var box = await Hive.openBox<E>('testBox');
 ```
 
-| Parameter | Description |
-| :--- | :--- |
-| name | The name of the box specifies the storage location and is used to check if a box already exists. It is **case-insensitive**. |
-| encryptionKey | The key has to be a byte array with length 32 and is used to encrypt and decrypt all values in the box. |
-| keyComparator | By default, keys are sorted lexicographically. This parameters allows you to provide a custom sorting order. |
-| compactionStrategy | Specify your own rules for automatic compaction. |
-| crashRecovery | If your app is killed while a write operations is running, the last entry might be corrupted. This entry is deleted automatically when the app starts again. If you don't want this behavior, you can disable it. |
-| path | By default, boxes are stored in the directory given to `Hive.init()`. With this parameter you can specify the location where the box should be stored. |
-| bytes | Instead of using a file as backend, you can provide the box in binary form and open an in-memory box. |
-| `E` | The optional type parameter specifies the type of the values in the box. |
+| Parameter          | Description                                                                                                                                                                                                       |
+| :----------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| name               | The name of the box specifies the storage location and is used to check if a box already exists. It is **case-insensitive**.                                                                                      |
+| encryptionKey      | The key has to be a byte array with length 32 and is used to encrypt and decrypt all values in the box.                                                                                                           |
+| keyComparator      | By default, keys are sorted lexicographically. This parameters allows you to provide a custom sorting order.                                                                                                      |
+| compactionStrategy | Specify your own rules for automatic compaction.                                                                                                                                                                  |
+| crashRecovery      | If your app is killed while a write operations is running, the last entry might be corrupted. This entry is deleted automatically when the app starts again. If you don't want this behavior, you can disable it. |
+| path               | By default, boxes are stored in the directory given to `Hive.init()`. With this parameter you can specify the location where the box should be stored.                                                            |
+| bytes              | Instead of using a file as backend, you can provide the box in binary form and open an in-memory box.                                                                                                             |
+| `E`                | The optional type parameter specifies the type of the values in the box.                                                                                                                                          |
 
 If the box is already open, it is returned immediately and all supplied parameters are ignored.
 
@@ -77,4 +77,3 @@ Hive.box<Dog>('users'); // ERROR
 ```
 
 !> Generic type parameters like Box<List<int>> are unsupported due to Dart limitations.
-

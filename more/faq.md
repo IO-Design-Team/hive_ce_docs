@@ -43,4 +43,3 @@ AES 256 CBC with PKCS7 padding.
 ## Do I have to call `Hive.close()`
 
 No, you don't. It might speed up the next start of your app but nothing to worry about.
-
