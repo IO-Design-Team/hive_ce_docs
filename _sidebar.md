@@ -33,7 +33,6 @@
 
 - More
 
-  - [Snippets for VSCode](more/vscode-snippets.md)
   - [Browser support](more/browser.md)
   - [Frequently Asked Questions](more/faq.md)
   - [Limitations](more/limitations.md)
@@ -44,3 +43,4 @@
   - [HiveType annotations](deprecated/hive_type_annotations.md)
   - [HiveObject](deprecated/hive_object.md)
   - [HiveList](deprecated/hive_list.md)
+  - [Snippets for VSCode](deprecated/vscode-snippets.md)
