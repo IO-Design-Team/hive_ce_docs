@@ -43,6 +43,7 @@ void main() async {
   Hive.init('somePath') // not needed in browser
 
   final box = await Hive.openBox('testBox');
+
   box.put('name', 'David');
 
   print('Name: ${box.get('name')}');
