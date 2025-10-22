@@ -335,7 +335,7 @@ dependencies:
   hive_ce_flutter: ^0.3.0+1
 
 dev_dependencies:
-  hive_generator: ^0.7.0
+  hive_ce_generator: ^0.7.0
   build_runner: ^1.7.2
   flutter_test:
     sdk: flutter

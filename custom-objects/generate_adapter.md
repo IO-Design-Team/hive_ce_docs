@@ -1,6 +1,6 @@
 # Generate adapter
 
-The [hive_generator](https://pub.dev/packages/hive_generator) package can automatically generate `TypeAdapter`s for almost any class.
+The [hive_ce_generator](https://pub.dev/packages/hive_ce_generator) package can automatically generate `TypeAdapter`s for almost any class.
 
 1. To generate a `TypeAdapter` for a class, annotate it with `@HiveType` and provide a `typeId` (between 0 and 223)
 2. Annotate all fields which should be stored with `@HiveField`
