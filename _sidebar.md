@@ -11,8 +11,6 @@
 
   - [TypeAdapters](custom-objects/type_adapters.md)
   - [Generate adapters](custom-objects/generate_adapters.md)
-  - [HiveObject](custom-objects/hive_object.md)
-  - [Relationships](custom-objects/relationships.md)
   - [Create adapter manually](custom-objects/create_adapter_manually.md)
 
 - Flutter Tutorials
@@ -44,3 +42,5 @@
   - [Deprecation Policy](deprecated/deprecation_policy.md)
   - [ValueListenable](deprecated/value_listenable.md)
   - [HiveType annotations](deprecated/hive_type_annotations.md)
+  - [HiveObject](deprecated/hive_object.md)
+  - [HiveList](deprecated/hive_list.md)

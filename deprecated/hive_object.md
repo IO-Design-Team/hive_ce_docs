@@ -1,3 +1,5 @@
+!> Usage of `HiveObject` requires that your model classes have mutable fields. Prefer using immutable model classes instead.
+
 # HiveObject
 
 When you store custom objects in Hive you can extend `HiveObject` to manage your objects easily.`HiveObject` provides the key of your object and useful helper methods like `save()` or `delete()`.
@@ -50,5 +52,3 @@ class PersonAdapter extends TypeAdapter<Person> {
   }
 }
 ```
-
-?> You also need to extend `HiveObject` if you want to use queries.

@@ -1,3 +1,5 @@
+!> Store lists of keys instead
+
 # Relationships
 
 Sometimes your models are connected with each other. The following person class has a list of other persons called "friends". There could also be a list of other objects like "pets".
