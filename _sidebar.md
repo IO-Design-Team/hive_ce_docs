@@ -39,3 +39,6 @@
   - [Browser support](more/browser.md)
   - [Frequently Asked Questions](more/faq.md)
   - [Limitations](more/limitations.md)
+
+- Deprecated
+  - [ValueListenable](deprecated/value_listenable.md)

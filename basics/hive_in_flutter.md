@@ -8,9 +8,9 @@ Before you can open a box, Hive needs to know where it can store its data. Andro
 
 The `hive_ce_flutter` package provides the `Hive.initFlutter()` extension method which handles everything for you.
 
-## ValueListenable
+## Listening for changes
 
-If you want your widgets to refresh based on the data stored in Hive, you can use the `ValueListenableBuilder`. The `box.listenable()` method provides a `ValueListenable` which can also be used with the `provider` package.
+If you want your widgets to refresh based on the data stored in Hive, you can use `box.watch()` with `StreamBuilder`.
 
 ```dart
 import 'package:flutter/material.dart';
@@ -25,14 +25,16 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final box = Hive.box('settings');
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Demo Settings',
       home: Scaffold(
-        body: ValueListenableBuilder<Box>(
-          valueListenable: Hive.box('settings').listenable(),
-          builder: (context, box, widget) {
+        body: StreamBuilder(
+          stream: box.watch(),
+          builder: (context, snapshot) {
             return Center(
               child: Switch(
                 value: box.get('darkMode', defaultValue: false),
@@ -53,12 +55,12 @@ Each time the value associated with `darkMode` changes, the `builder` is called,
 
 ### Listening for specific keys
 
-It is good practice to refresh widgets only if necessary. If a widget only depends on specific keys in your box, you can provide the `keys` parameter:
+It is good practice to refresh widgets only if necessary. If a widget only depends on specific keys in your box, you can filter the stream:
 
 ```dart
-ValueListenableBuilder<Box>(
-  valueListenable: Hive.box('settings').listenable(keys: ['firstKey', 'secondKey']),
-  builder: (context, box, widget) {
+StreamBuilder(
+  stream: Hive.box('settings').watch().where((event) => {'firstKey', 'secondKey'}.contains(event.key)),
+  builder: (context, snapshot) {
     // build widget
   },
 )
