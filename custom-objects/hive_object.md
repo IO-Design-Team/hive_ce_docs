@@ -4,7 +4,7 @@ When you store custom objects in Hive you can extend `HiveObject` to manage your
 
 Here is an example how to use `HiveObject`:
 
-```dart:dart:650px
+```dart
 import 'package:hive_ce/hive.dart';
 
 void main() async {

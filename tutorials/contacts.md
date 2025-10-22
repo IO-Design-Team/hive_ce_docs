@@ -14,7 +14,7 @@ Below you can find the final code and test the app.
 
 (Reload to test persistance)
 
-```dart:flutter:500px
+```dart
 import 'package:flutter/material.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:hive_ce/hive.dart';

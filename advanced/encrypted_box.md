@@ -6,7 +6,7 @@ The only thing you need is a 256-bit \(32 bytes\) encryption key. Hive provides 
 
 Just pass the key when you open a box:
 
-```dart:dart:400px
+```dart
 import 'dart:convert';
 import 'package:hive_ce/hive.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

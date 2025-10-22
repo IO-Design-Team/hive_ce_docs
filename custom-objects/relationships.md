@@ -20,7 +20,7 @@ You could just use a regular list to store the persons, but updating a person wo
 
 HiveLists provide an easy way to solve the problem above. They allow you to store a "link" to the actual object.
 
-```dart:dart:500px
+```dart
 import 'package:hive_ce/hive.dart';
 
 void main() async {

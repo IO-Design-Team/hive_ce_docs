@@ -10,7 +10,7 @@ Below you can find the final code and test the app.
 
 (Refresh this page to test persistence)
 
-```dart:flutter:500px
+```dart
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -102,7 +102,7 @@ void main() async {
 
 The following is the main structure of our app. A Material themed app with a single `Switch` in the center.
 
-```dart:flutter:500px
+```dart
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -135,7 +135,7 @@ Based on the `darkMode` value we set the `themeMode` of the `MaterialApp`.
 
 When the user toggles the switch, we update the `darkMode` entry in the box.
 
-```dart:flutter:700px
+```dart
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -180,7 +180,7 @@ When you run the example, you will notice that it does not work as intended. The
 
 The last step is to refresh the app when necessary. The easiest way to refresh widgets based on Hive changes is using `box.listenable()` and `ValueListenableBuilder`.
 
-```dart:flutter:700px
+```dart
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';

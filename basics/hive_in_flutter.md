@@ -12,7 +12,7 @@ The `hive_ce_flutter` package provides the `Hive.initFlutter()` extension method
 
 If you want your widgets to refresh based on the data stored in Hive, you can use the `ValueListenableBuilder`. The `box.listenable()` method provides a `ValueListenable` which can also be used with the `provider` package.
 
-```dart:flutter:600px
+```dart
 import 'package:flutter/material.dart';
 
 import 'package:hive_ce/hive.dart';
