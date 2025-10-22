@@ -1,4 +1,4 @@
-# Generate adapter
+# Generate adapters
 
 The [hive_ce_generator](https://pub.dev/packages/hive_ce_generator) package can automatically generate `TypeAdapter`s for almost any class. You can even generate adapters for external packages such as a generated OpenAPI client.
 
