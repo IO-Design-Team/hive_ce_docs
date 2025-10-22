@@ -6,11 +6,11 @@ Hive supports all platforms where the Dart VM runs plus browsers. On browsers, I
 
 ## When should I use Hive
 
-[When to use Hive](../best-practices/when_to_use_hive.md#when-to-use-hive)
+[When to use Hive](/best-practices/when_to_use_hive.md#when-to-use-hive)
 
 ## When should I not use Hive
 
-[When not to use Hive](../best-practices/when_to_use_hive.md#when-not-to-use-hive)
+[When not to use Hive](/best-practices/when_to_use_hive.md#when-not-to-use-hive)
 
 ## Where does Hive store my data?
 
@@ -26,7 +26,7 @@ The worst thing that can happen is that you lose the last entry if it isn't writ
 
 ## Why is `box.get()` synchronous? Isn't that slow?
 
-Hive caches all entries by default, so no. If you don't want that, use [lazy boxes](../advanced/lazy_box.md) instead.
+Hive caches all entries by default, so no. If you don't want that, use [lazy boxes](/advanced/lazy_box.md) instead.
 
 ## Can I use Hive to store binary data like images?
 
@@ -34,7 +34,7 @@ Yes, but don't store too big images \(a few MB should be fine\).
 
 ## Can Hive sync data with a server?
 
-Not out of the box but you can do that yourself quite easily using the `box.toMap()` method and the [change notifier](../advanced/watch_changes.md).
+Not out of the box but you can do that yourself quite easily using the `box.toMap()` method and the [change notifier](/advanced/watch_changes.md).
 
 ## What type of encryption does Hive use?
 

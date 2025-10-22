@@ -322,7 +322,7 @@ flutter create contacts
 
 ## Dependencies
 
-Now, we need to define our dependencies. We will be using `dev_dependencies` to generate our [`TypeAdapters`](../custom-objects/type_adapters.md) automatically! Read more about generating adapters automatically [here](../custom-objects/generate_adapter.md).
+Now, we need to define our dependencies. We will be using `dev_dependencies` to generate our [`TypeAdapters`](/custom-objects/type_adapters.md) automatically! Read more about generating adapters automatically [here](/custom-objects/generate_adapters.md).
 
 ```yaml
 environment:
@@ -359,11 +359,11 @@ flutter packages pub run build_runner build --delete-conflicting-outputs
 
 That command generates the adapters for you, no work required! The `--delete-conflicting-outputs` option is useful if you're re-generating the files as it will delete them automatically. Otherwise, it will throw an error if you don't delete the files that have already been generated.
 
-!> Do _not_ modify the code inside of the generated adapters. If you want to make your own adapter, read [here](../custom-objects/create_adapter_manually.md) and make sure you added the `build_runner` dependency to your `pubspec.yaml`!
+!> Do _not_ modify the code inside of the generated adapters. If you want to make your own adapter, read [here](/custom-objects/create_adapter_manually.md) and make sure you added the `build_runner` dependency to your `pubspec.yaml`!
 
 Now we need to initialize Hive and the adapters in the `main()` function.
 
-The `registerAdapter()` method is synchronous and it just takes an instance of the adapter. Read more [here](../custom-objects/type_adapters.md).
+The `registerAdapter()` method is synchronous and it just takes an instance of the adapter. Read more [here](/custom-objects/type_adapters.md).
 
 ```dart
 const String contactsBoxName = "contacts";
@@ -385,7 +385,7 @@ We need to define our models and enums. We're calling the model class `Contact` 
 
 Above every model and enum that you want stored in Hive, you need to put a `HiveType` annotation to show Hive that this is something you want stored.
 
-Above every object in an enum and every field in a model, you need to add a `HiveField` annotation with a value. The values can be between 0 and 255 (0-255). Read more [here](../custom-objects/generate_adapter.md).
+Above every object in an enum and every field in a model, you need to add a `HiveField` annotation with a value. The values can be between 0 and 255 (0-255). Read more [here](/custom-objects/generate_adapters.md).
 
 As you can see we also have a map which converts the `Relationship` enum to a string so we don't need to worry about conversion methods and messy `if statements`.
 
@@ -650,7 +650,7 @@ Uh oh, you have too many contacts and now you have to delete some. How do we do 
 
 Remember that `InkWell` widget above the `Card`? We're going to use the `onLongPress` callback to open a dialog that asks the user whether or not they would like to delete the selected contact.
 
-!> We're using `Box.deleteAt()` instead of `Box.delete()` because we're using auto-incrementing keys to store the contacts. Read more [here](../basics/auto_increment.md).
+!> We're using `Box.deleteAt()` instead of `Box.delete()` because we're using auto-incrementing keys to store the contacts. Read more [here](/basics/auto_increment.md).
 
 ```dart
 // inside of `InkWell` widget

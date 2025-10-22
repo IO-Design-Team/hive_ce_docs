@@ -17,8 +17,6 @@ Key-value databases can be used to store almost any kind of data. For example:
 
 Hive is also one of the best options when it comes to cross-platform support. You don't have to include binaries, and it works in the browser using IndexedDB.
 
-If you use the `shared_preferences` packages and don't need to access them from native code, you should always use Hive instead.
-
 ## When not to use Hive
 
 Every kind of data can be stored in Hive when modeled correctly. That being said, it might sometimes be more convenient to use a relational database like SQLite. (More convenient, not faster!)
