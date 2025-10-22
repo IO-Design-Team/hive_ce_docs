@@ -52,48 +52,11 @@
       },
       plugins: [
         EditOnGithubPlugin.create('https://github.com/IO-Design-Team/hive_ce_docs/tree/master/', undefined, 'Edit on GitHub'),
-        function (hook) {
-          var codes = {};
-          hook.beforeEach(function (content) {
-            return content.replace(/^```version[^\x05]*?```/mg, function (m) {
-              if (hiveDependencies !== undefined) {
-                return '```yaml\n' + hiveDependencies + '\n```';
-              } else {
-                return '<pre data-lang="yaml" id="hiveDependencies"></pre>';
-              }
-            });
-          });
-        }
       ]
     }
 
     window.hj = function () { (h.hj.q = h.hj.q || []).push(arguments) };
     window._hjSettings = { hjid: 1654615, hjsv: 6 };
-
-    var hiveDependencies;
-    async function load() {
-      var url = 'https://api.allorigins.win/get?url=https://pub.dev/api/packages/'
-      var packages = ['hive_ce', 'hive_ce_flutter', 'hive_ce_generator', 'build_runner']
-      Promise.all(packages.map(p => fetch(url + p))).then(responses =>
-        Promise.all(responses.map(res => res.json()))
-      ).then(json => {
-        var versions = json.map((j) => JSON.parse(j.contents)['latest']['version']);
-        hiveDependencies = `dependencies:
-  hive_ce: ^${versions[0]}
-  hive_ce_flutter: ^${versions[1]}
-
-dev_dependencies:
-  hive_ce_generator: ^${versions[2]}
-  build_runner: ^${versions[3]}
-`;
-        var dependencyElement = document.getElementById('hiveDependencies');
-        if (dependencyElement !== null) {
-          var highlighted = Prism.highlight(hiveDependencies, Prism.languages.yaml, 'yaml');
-          dependencyElement.innerHTML = `<code class="language-yaml">${highlighted}</code>` + dependencyElement.innerHTML;
-        }
-      })
-    }
-    load();
   </script>
   <script src="https://unpkg.com/docsify/lib/docsify.min.js"></script>
   <script src="https://unpkg.com/docsify/lib/plugins/ga.min.js"></script>

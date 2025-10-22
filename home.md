@@ -1,19 +1,15 @@
-# Quick Start
-
-Before you start: Consider using [Isar](https://isar.dev) a Flutter database by the author of Hive that is superior in every way!
-
 ## Add to project
 
 Add the following to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  hive_ce: ^[version]
-  hive_ce_flutter: ^[version]
+  hive_ce: latest
+  hive_ce_flutter: latest
 
 dev_dependencies:
-  hive_ce_generator: ^[version]
-  build_runner: ^[version]
+  hive_ce_generator: latest
+  build_runner: latest
 ```
 
 ## Initialize
