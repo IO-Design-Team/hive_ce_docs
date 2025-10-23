@@ -22,6 +22,7 @@
 
 - Advanced
 
+  - [Isolates](advanced/isolates.md)
   - [Lazy box](advanced/lazy_box.md)
   - [Encrypted box](advanced/encrypted_box.md)
   - [Compaction](advanced/compaction.md)
