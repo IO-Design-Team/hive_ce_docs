@@ -2,7 +2,7 @@
 
 If you already have model classes with `HiveType` and `HiveField` annotations, you can take the following steps to migrate to the new [GenerateAdapters](/custom-objects/generate_adapters.md) annotation:
 
-1. Convert all default values to [constructor parameter defaults](https://dart.dev/null-safety/default-initialization-parameters)
+1. Convert all default values to [constructor parameter defaults](/custom-objects/generate_adapters.md#default-value)
 2. Add the following to your `build.yaml` file:
 
 ```yaml
