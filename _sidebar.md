@@ -27,6 +27,7 @@
   - [Encrypted box](advanced/encrypted_box.md)
   - [Compaction](advanced/compaction.md)
   - [Watch changes](advanced/watch_changes.md)
+  - [BoxCollection](advanced/box_collection.md)
 
 - Best Practices
 
