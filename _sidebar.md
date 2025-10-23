@@ -13,12 +13,12 @@
   - [Generate adapters](custom-objects/generate_adapters.md)
   - [Create adapter manually](custom-objects/create_adapter_manually.md)
 
-<!-- - Flutter Tutorials
+- Flutter Tutorials
 
   - [Dark Mode Switch](tutorials/dark_mode_switch.md)
   - [Favorite Books](tutorials/favorite_books.md)
   - [Sketchpad](tutorials/sketchpad.md)
-  - [Contacts](tutorials/contacts.md) -->
+  - [Contacts](tutorials/contacts.md)
 
 - Advanced
 
