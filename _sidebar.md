@@ -34,6 +34,7 @@
 
 - More
 
+  - [DevTools Extension](more/devtools_extension.md)
   - [Browser support](more/browser.md)
   - [Frequently Asked Questions](more/faq.md)
   - [Limitations](more/limitations.md)
