@@ -1,4 +1,4 @@
-# DevTools Extension
+# DevTools extension
 
 When your app is running in debug mode, you can use the Hive CE Inspector to inspect boxes
 
