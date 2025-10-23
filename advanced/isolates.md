@@ -20,16 +20,15 @@ You may be using multiple isolates without even realizing it. Here are some comm
 
 `IsolatedHive` allows you to safely interact with boxes in a multi-isolate environment by maintaining its own separate isolate for `Hive` operations
 
+!> If you are using `IsolatedHive`, you MUST use it everywhere in place of the normal `Hive` interface
+
 `IsolatedHive` has a very similar API to `Hive`, but there are some key differences:
 
-- The `init` call takes an `isolateNameServer` parameter
 - Most methods are asynchronous due to isolate communication
 - `IsolatedHive` does not support `HiveObject` or `HiveList`
 - Isolate communication does add some overhead
 
 ?> On web, `IsolatedHive` directly calls `Hive` since web does not support isolates
-
-!> If you are using `IsolatedHive`, you MUST use it everywhere in place of the normal `Hive` interface
 
 ## Usage
 
@@ -42,3 +41,7 @@ print(await box.get('key')); // reading is async
 ```
 
 ?> `IsolatedHive` does not have out of the box support for running in a Dart-only environment
+
+## Example
+
+See an example of a multi-window Flutter app using `IsolatedHive` [here](https://github.com/Rexios80/hive_ce_multiwindow)
