@@ -1,4 +1,4 @@
-!> Use a [GenerateAdapters](custom-objects/generate_adapters.md) annotation instead.
+!> Use a [GenerateAdapters](/custom-objects/generate_adapters.md) annotation instead.
 
 # Generate adapter
 
@@ -7,7 +7,7 @@ The [hive_ce_generator](https://pub.dev/packages/hive_ce_generator) package can 
 1. To generate a `TypeAdapter` for a class, annotate it with `@HiveType` and provide a `typeId` (between 0 and 223)
 2. Annotate all fields which should be stored with `@HiveField`
 3. Run build task `dart run build_runner build`
-4. [Register](custom-objects/type_adapters.md) the generated adapter
+4. [Register](/custom-objects/type_adapters.md) the generated adapter
 
 ### Example
 
