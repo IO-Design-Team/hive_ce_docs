@@ -8,7 +8,8 @@
   <meta name="description" content="Documentation for the Hive CE package">
   <meta name="viewport"
     content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="https://unpkg.com/docsify/lib/themes/vue.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-darklight-theme@3/dist/style.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono|Source+Sans+Pro:300,400,600">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://www.youtube.com">
   <link rel="preconnect" href="https://i.ytimg.com">
@@ -28,6 +29,18 @@
       left: 0;
       width: 100%;
       height: 100%;
+    }
+
+    /* Dark mode theme overrides */
+    :root {
+      --siteFont: 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif !important;
+      --codeFontFamily: 'Roboto Mono', Monaco, courier, monospace !important;
+      --bodyFontSize: 15px !important;
+      --accent: #0AC7EF !important;
+    }
+
+    html[style*="color-scheme: dark"] .sidebar > h1 img {
+      filter: invert(1) hue-rotate(180deg) brightness(1.2);
     }
   </style>
 </head>
@@ -66,4 +79,5 @@
   <script src="https://unpkg.com/prismjs/components/prism-dart.min.js"></script>
   <script src="https://unpkg.com/prismjs/components/prism-yaml.min.js"></script>
   <script src="https://static.hotjar.com/c/hotjar-1654615.js?sv=6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-darklight-theme@3/dist/index.min.js"></script>
 </body>
