@@ -14,7 +14,7 @@ The [hive_ce_generator](https://pub.dev/packages/hive_ce_generator) package can 
 Given a library `person.dart` with a `Person` class annotated with `@HiveType` with a **unique** `typeId` argument:
 
 ```dart
-import 'package:hive_ce/hive.dart';
+import 'package:hive_ce/hive_ce.dart';
 
 part 'person.g.dart';
 

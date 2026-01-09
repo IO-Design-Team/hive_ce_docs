@@ -27,7 +27,7 @@ You always get the same instance of an object from a specific key. It does not m
 Here is an example:
 
 ```dart
-import 'package:hive_ce/hive.dart';
+import 'package:hive_ce/hive_ce.dart';
 
 void main() async {
   final box = await Hive.openBox('someBox');
@@ -90,7 +90,7 @@ print(lazyBox.get('key')); // value
 If you want to change an existing value, you can either override it using for example `put()` or delete it:
 
 ```dart
-import 'package:hive_ce/hive.dart';
+import 'package:hive_ce/hive_ce.dart';
 
 void main() async {
   final box = await Hive.openBox('deleteExample');
@@ -110,7 +110,7 @@ If the key does not exist, no disk access is needed and the returned `Future` fi
 Writing `null` is **NOT** the same as deleting a value.
 
 ```dart
-import 'package:hive_ce/hive.dart';
+import 'package:hive_ce/hive_ce.dart';
 
 void main() async {
   final box = await Hive.openBox('writeNullBox');

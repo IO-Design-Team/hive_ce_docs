@@ -14,8 +14,8 @@ Below you can find the final code and test the app.
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:hive_ce/hive.dart';
-import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive_ce.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 const favoritesBox = 'favorite_books';
 const List<String> books = [
@@ -141,8 +141,8 @@ I've defined a `const` variable to hold our `Box` name. Inside the `main()` func
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:hive_ce/hive.dart';
-import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive_ce.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 const favoritesBox = 'favorite_books';
 

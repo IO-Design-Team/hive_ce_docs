@@ -3,7 +3,7 @@
 We already know that Hive supports unsigned integer keys. You can use auto-increment keys if you like. This is very useful for storing and accessing multiple objects. You can use a Box like a list.
 
 ```dart
-import 'package:hive_ce/hive.dart';
+import 'package:hive_ce/hive_ce.dart';
 
 void main() async {
   final friends = await Hive.openBox('friends');

@@ -17,7 +17,7 @@ Hive.registerAdapter(MyObjectAdapter());
 ?> It's recommended to register all `TypeAdapter`s before opening any boxes.
 
 ```dart
-import 'package:hive_ce/hive.dart';
+import 'package:hive_ce/hive_ce.dart';
 
 class User {
   final String name;

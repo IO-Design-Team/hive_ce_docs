@@ -8,7 +8,7 @@ Just pass the key when you open a box:
 
 ```dart
 import 'dart:convert';
-import 'package:hive_ce/hive.dart';
+import 'package:hive_ce/hive_ce.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() async {

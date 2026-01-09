@@ -39,7 +39,7 @@ final box = await Hive.openBox('testBox');
 Hive supports all primitive types, `List`, `Set`, `Map`, `DateTime`, `Duration`, `BigInt` and `Uint8List`. Any object can be stored using [TypeAdapters](/custom-objects/generate_adapters.md).
 
 ```dart
-import 'package:hive_ce/hive.dart';
+import 'package:hive_ce/hive_ce.dart';
 
 void main() async {
   Hive.init('somePath') // not needed in browser

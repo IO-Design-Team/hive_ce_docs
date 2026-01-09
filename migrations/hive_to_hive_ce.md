@@ -30,8 +30,8 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 // new imports
-import 'package:hive_ce/hive.dart';
-import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive_ce.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 ```
 
 !> Data from Hive v4 IS NOT compatible with Hive CE

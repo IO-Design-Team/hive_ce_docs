@@ -48,7 +48,7 @@ class Person {
 `lib/hive/hive_adapters.dart`:
 
 ```dart
-import 'package:hive_ce/hive.dart';
+import 'package:hive_ce/hive_ce.dart';
 import 'person.dart';
 
 @GenerateAdapters([AdapterSpec<Person>()])
@@ -58,7 +58,7 @@ part 'hive_adapters.g.dart';
 Adapter registration:
 
 ```dart
-import 'package:hive_ce/hive.dart';
+import 'package:hive_ce/hive_ce.dart';
 import 'package:your_package/hive/hive_registrar.g.dart';
 
 void main() {

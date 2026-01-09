@@ -7,8 +7,8 @@ If you want your widgets to refresh based on the data stored in Hive, you can us
 ```dart
 import 'package:flutter/material.dart';
 
-import 'package:hive_ce/hive.dart';
-import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive_ce.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 void main() async {
   await Hive.initFlutter();
