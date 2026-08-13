@@ -4,313 +4,11 @@
 
 In this tutorial, we will be building a fully functional app that stores your contacts in under 230 lines of code!
 
-We will be using model classes and enums, all of which Hive can store in it's databases. Pretty cool right? No more converting all of your models to JSON and your enums to strings. Let's get started!
+We will be using immutable model classes and enums. Hive CE generates the adapters for them with `GenerateAdapters`, so you do not need `@HiveType` or `@HiveField` on every field. Let's get started!
 
-## Source Code & Live Test
+## Source Code
 
 Here's the source: https://github.com/IO-Design-Team/hive_ce_samples/tree/master/contacts
-
-Below you can find the final code and test the app.
-
-(Reload to test persistance)
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:hive_ce_flutter/hive_ce_flutter.dart';
-import 'package:hive_ce/hive_ce.dart';
-
-const String contactsBoxName = "contacts";
-
-@HiveType(typeId: 1)
-enum Relationship {
-  @HiveField(0)
-  Family,
-  @HiveField(1)
-  Friend,
-}
-const relationshipString = <Relationship, String>{
-  Relationship.Family: "Family",
-  Relationship.Friend: "Friend",
-};
-
-@HiveType(typeId: 0)
-class Contact {
-  @HiveField(0)
-  String name;
-  @HiveField(1)
-  int age;
-  @HiveField(2)
-  Relationship relationship;
-  @HiveField(3)
-  String phoneNumber;
-
-  Contact(this.name, this.age, this.phoneNumber, this.relationship);
-}
-
-void main() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter<Contact>(ContactAdapter());
-  Hive.registerAdapter<Relationship>(RelationshipAdapter());
-  await Hive.openBox<Contact>(contactsBoxName);
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Contacts App',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Contacts App with Hive'),
-        ),
-        body: ValueListenableBuilder(
-          valueListenable: Hive.box<Contact>(contactsBoxName).listenable(),
-          builder: (context, Box<Contact> box, _) {
-            if (box.values.isEmpty)
-              return Center(
-                child: Text("No contacts"),
-              );
-            return ListView.builder(
-              itemCount: box.values.length,
-              itemBuilder: (context, index) {
-                Contact currentContact = box.getAt(index);
-                String relationship =
-                    relationshipString[currentContact.relationship];
-                return Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: InkWell(
-                    onLongPress: () {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        child: AlertDialog(
-                          content: Text(
-                            "Do you want to delete ${currentContact.name}?",
-                          ),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: Text("No"),
-                              onPressed: () => Navigator.of(context).pop(),
-                            ),
-                            FlatButton(
-                              child: Text("Yes"),
-                              onPressed: () async {
-                                await box.deleteAt(index);
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height: 5),
-                          Text(currentContact.name),
-                          SizedBox(height: 5),
-                          Text(currentContact.phoneNumber),
-                          SizedBox(height: 5),
-                          Text("Age: ${currentContact.age}"),
-                          SizedBox(height: 5),
-                          Text("Relationship: $relationship"),
-                          SizedBox(height: 5),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        ),
-        floatingActionButton: Builder(
-          builder: (context) {
-            return FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => AddContact()));
-              },
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class AddContact extends StatefulWidget {
-  final formKey = GlobalKey<FormState>();
-
-  @override
-  _AddContactState createState() => _AddContactState();
-}
-
-class _AddContactState extends State<AddContact> {
-  String name;
-  int age;
-  String phoneNumber;
-  Relationship relationship;
-
-  void onFormSubmit() {
-    if (widget.formKey.currentState.validate()) {
-      Box<Contact> contactsBox = Hive.box<Contact>(contactsBoxName);
-      contactsBox.add(Contact(name, age, phoneNumber, relationship));
-      Navigator.of(context).pop();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Form(
-            key: widget.formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  TextFormField(
-                    autofocus: true,
-                    initialValue: "",
-                    decoration: const InputDecoration(
-                      labelText: "Name",
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        name = value;
-                      });
-                    },
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    initialValue: "",
-                    maxLength: 3,
-                    maxLengthEnforced: true,
-                    decoration: const InputDecoration(
-                      labelText: "Age",
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        age = int.parse(value);
-                      });
-                    },
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.phone,
-                    initialValue: "",
-                    decoration: const InputDecoration(
-                      labelText: "Phone",
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        phoneNumber = value;
-                      });
-                    },
-                  ),
-                  DropdownButton<Relationship>(
-                    items: relationshipString.keys.map((Relationship value) {
-                      return DropdownMenuItem<Relationship>(
-                        value: value,
-                        child: Text(relationshipString[value]),
-                      );
-                    }).toList(),
-                    value: relationship,
-                    hint: Text("Relationship"),
-                    onChanged: (value) {
-                      setState(() {
-                        relationship = value;
-                      });
-                    },
-                  ),
-                  OutlineButton(
-                    child: Text("Submit"),
-                    onPressed: onFormSubmit,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
-// **************************************************************************
-// TypeAdapterGenerator
-// **************************************************************************
-
-class RelationshipAdapter extends TypeAdapter<Relationship> {
-  @override
-  final typeId = 1;
-
-  @override
-  Relationship read(BinaryReader reader) {
-    switch (reader.readByte()) {
-      case 0:
-        return Relationship.Family;
-      case 1:
-        return Relationship.Friend;
-      default:
-        return null;
-    }
-  }
-
-  @override
-  void write(BinaryWriter writer, Relationship obj) {
-    switch (obj) {
-      case Relationship.Family:
-        writer.writeByte(0);
-        break;
-      case Relationship.Friend:
-        writer.writeByte(1);
-        break;
-    }
-  }
-}
-
-class ContactAdapter extends TypeAdapter<Contact> {
-  @override
-  final typeId = 0;
-
-  @override
-  Contact read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (var i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return Contact(
-      fields[0] as String,
-      fields[1] as int,
-      fields[3] as String,
-      fields[2] as Relationship,
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, Contact obj) {
-    writer
-      ..writeByte(4)
-      ..writeByte(0)
-      ..write(obj.name)
-      ..writeByte(1)
-      ..write(obj.age)
-      ..writeByte(2)
-      ..write(obj.relationship)
-      ..writeByte(3)
-      ..write(obj.phoneNumber);
-  }
-}
-```
 
 ## Setup
 
@@ -322,162 +20,180 @@ flutter create contacts
 
 ## Dependencies
 
-Now, we need to define our dependencies. We will be using `dev_dependencies` to generate our [`TypeAdapters`](/custom-objects/type_adapters.md) automatically! Read more about generating adapters automatically [here](/custom-objects/generate_adapters.md).
+Add Hive CE and the generator. Adapters are generated with [`GenerateAdapters`](/custom-objects/generate_adapters.md).
 
 ```yaml
 environment:
-  sdk: ^3.0.0
+  sdk: ^3.4.0
 
 dependencies:
   flutter:
     sdk: flutter
-  hive_ce: ^1.3.0
-  hive_ce_flutter: ^0.3.0+1
+  hive_ce: latest
+  hive_ce_flutter: latest
 
 dev_dependencies:
-  hive_ce_generator: ^0.7.0
-  build_runner: ^1.7.2
+  hive_ce_generator: latest
+  build_runner: latest
   flutter_test:
     sdk: flutter
 ```
 
-## Initialization
+## Models and Enums
 
-Now we need to generate the adapters for Hive to use to read and write to the box and guess what, it's very easy! At the top of the file (just below the imports), add this line:
+Keep models immutable: `final` fields and a `const` constructor. Hive CE does not need annotations on the class.
+
+One field is a `Relationship` enum. Hive can store that the same way it stores the `Contact` class.
 
 ```dart
-part 'main.g.dart';
+class Contact {
+  const Contact({
+    required this.name,
+    required this.age,
+    required this.phoneNumber,
+    required this.relationship,
+  });
+
+  final String name;
+  final int age;
+  final String phoneNumber;
+  final Relationship relationship;
+}
+
+enum Relationship { family, friend }
+
+const relationshipString = <Relationship, String>{
+  Relationship.family: 'Family',
+  Relationship.friend: 'Friend',
+};
 ```
 
-Notice how you have the file name "main", then a "g" that stands for generated, and finally the file extension "dart". This is important so Dart knows that file is a part of `main.dart`.
+## Generate adapters
 
-Also notice how you have an error on that line. To get rid of it, run the following command:
+Create `lib/hive/hive_adapters.dart` and list each type in `@GenerateAdapters`. Type IDs and field indexes live in the generated schema, not on the model.
+
+```dart
+import 'package:hive_ce/hive_ce.dart';
+import '../contact.dart';
+
+@GenerateAdapters([
+  AdapterSpec<Contact>(),
+  AdapterSpec<Relationship>(),
+])
+part 'hive_adapters.g.dart';
+```
+
+Then run:
 
 ```shell
-flutter packages pub run build_runner build --delete-conflicting-outputs
+dart run build_runner build --delete-conflicting-outputs
 ```
 
-That command generates the adapters for you, no work required! The `--delete-conflicting-outputs` option is useful if you're re-generating the files as it will delete them automatically. Otherwise, it will throw an error if you don't delete the files that have already been generated.
+That generates:
 
-!> Do _not_ modify the code inside of the generated adapters. If you want to make your own adapter, read [here](/custom-objects/create_adapter_manually.md) and make sure you added the `build_runner` dependency to your `pubspec.yaml`!
+- `hive_adapters.g.dart` — the adapter classes
+- `hive_adapters.g.yaml` — the schema (check this in)
+- `hive_registrar.g.dart` — `Hive.registerAdapters()`
 
-Now we need to initialize Hive and the adapters in the `main()` function.
+!> Do not edit `hive_adapters.g.dart` or `hive_registrar.g.dart`. If a class or field is renamed, update `hive_adapters.g.yaml` as described [here](/custom-objects/generate_adapters.md).
 
-The `registerAdapter()` method is synchronous and it just takes an instance of the adapter. Read more [here](/custom-objects/type_adapters.md).
+## Initialization
+
+Initialize Hive, register every generated adapter in one call, then open the box before `runApp()`.
 
 ```dart
-const String contactsBoxName = "contacts";
+import 'package:flutter/material.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
+import 'package:contacts/hive/hive_registrar.g.dart';
+import 'package:contacts/contact.dart';
+
+const contactsBoxName = 'contacts';
 
 void main() async {
   await Hive.initFlutter();
-  Hive.registerAdapter<Contact>(ContactAdapter());
-  Hive.registerAdapter<Relationship>(RelationshipAdapter());
+  Hive.registerAdapters();
   await Hive.openBox<Contact>(contactsBoxName);
-  runApp(MyApp());
-}
-```
-
-!> As of Hive 1.3.0, the `registerAdapter()` method no longer takes a `typeId` parameter. The `@HiveType` annotation has a parameter for `typeId` now.
-
-## Models and Enums
-
-We need to define our models and enums. We're calling the model class `Contact` which stores the necessary information for a contact and one of the fields in the `Contact` model is an enum which is called `Relationship` which defines the relationship between the people.
-
-Above every model and enum that you want stored in Hive, you need to put a `HiveType` annotation to show Hive that this is something you want stored.
-
-Above every object in an enum and every field in a model, you need to add a `HiveField` annotation with a value. The values can be between 0 and 255 (0-255). Read more [here](/custom-objects/generate_adapters.md).
-
-As you can see we also have a map which converts the `Relationship` enum to a string so we don't need to worry about conversion methods and messy `if statements`.
-
-```dart
-@HiveType(typeId: 1)
-enum Relationship {
-  @HiveField(0)
-  Family,
-  @HiveField(1)
-  Friend,
-}
-const relationshipString = <Relationship, String>{
-  Relationship.Family: "Family",
-  Relationship.Friend: "Friend",
-};
-
-@HiveType(typeId: 0)
-class Contact {
-  @HiveField(0)
-  String name;
-  @HiveField(1)
-  int age;
-  @HiveField(2)
-  Relationship relationship;
-  @HiveField(3)
-  String phoneNumber;
-
-  Contact(this.name, this.age, this.phoneNumber, this.relationship);
+  runApp(const MyApp());
 }
 ```
 
 ## Main App Structure
 
-All of the UI code (except for the form) is in one widget, `MyApp`. `MyApp` contains a `MaterialApp` with a `ValueListenableBuilder` which listens to our box that we opened earlier and rebuilds the UI when it changes.
+All of the UI code (except for the form) is in one widget, `MyApp`. It uses a `ValueListenableBuilder` so the list rebuilds when the box changes.
 
-So there's a lot going on here! Let's break it down.
-
-Inside of the `ValueListenableBuilder`, we check if the box is empty and return a `Text` widget notifying the user that they don't have any contacts stored in the app.
-
-However, if the box is not empty, we need to show the user their stored contacts so for that we use a `ListView.builder`.
-
-Using the index provided by the list builder, we can get the contact and access it's information to display it however we want. We're also making use of that `Map` to convert the `Relationship` enum (provided by the contact) to a displayable string.
-
-Notice how I put a `InkWell` widget above the `Card`. We're going to use that so when the user does a long press on the card, it will show a dialog asking the user if they would like to delete the contact. For now it's empty but we'll get back to it later.
-
-We're also using a `FloatingActionButton` (FAB) to navigate the user to the `AddContact` screen.
-
-This is a very simple layout and I challenge you to improve upon it and make the app look gorgeous!
+If the box is empty, we show a short message. Otherwise a `ListView.builder` reads each contact with `Box.getAt()`. A long press on a card asks to delete it. The FAB opens the `AddContact` screen.
 
 !> Since we're not storing the keys ourselves, we're using `Box.getAt()` instead of `Box.get()`.
 
 ```dart
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Contacts App',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Contacts App with Hive'),
+          title: const Text('Contacts App with Hive'),
         ),
         body: ValueListenableBuilder(
           valueListenable: Hive.box<Contact>(contactsBoxName).listenable(),
           builder: (context, Box<Contact> box, _) {
-            if (box.values.isEmpty)
-              return Center(
-                child: Text("No contacts"),
+            if (box.values.isEmpty) {
+              return const Center(
+                child: Text('No contacts'),
               );
+            }
             return ListView.builder(
               itemCount: box.values.length,
               itemBuilder: (context, index) {
-                Contact currentContact = box.getAt(index);
-                String relationship =
+                final currentContact = box.getAt(index)!;
+                final relationship =
                     relationshipString[currentContact.relationship];
                 return Card(
                   clipBehavior: Clip.antiAlias,
                   child: InkWell(
-                    onLongPress: () { /* ... */ },
+                    onLongPress: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (context) => AlertDialog(
+                          content: Text(
+                            'Do you want to delete ${currentContact.name}?',
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('No'),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                            TextButton(
+                              child: const Text('Yes'),
+                              onPressed: () async {
+                                await box.deleteAt(index);
+                                if (context.mounted) {
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(currentContact.name),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(currentContact.phoneNumber),
-                          SizedBox(height: 5),
-                          Text("Age: ${currentContact.age}"),
-                          SizedBox(height: 5),
-                          Text("Relationship: $relationship"),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
+                          Text('Age: ${currentContact.age}'),
+                          const SizedBox(height: 5),
+                          Text('Relationship: $relationship'),
+                          const SizedBox(height: 5),
                         ],
                       ),
                     ),
@@ -490,10 +206,11 @@ class MyApp extends StatelessWidget {
         floatingActionButton: Builder(
           builder: (context) {
             return FloatingActionButton(
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
               onPressed: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => AddContact()));
+                  MaterialPageRoute(builder: (context) => AddContact()),
+                );
               },
             );
           },
@@ -527,17 +244,19 @@ Feel free to add as many fields as you like!
 
 ```dart
 class AddContact extends StatefulWidget {
+  AddContact({super.key});
+
   final formKey = GlobalKey<FormState>();
 
   @override
-  _AddContactState createState() => _AddContactState();
+  State<AddContact> createState() => _AddContactState();
 }
 
 class _AddContactState extends State<AddContact> {
-  String name;
-  int age;
-  String phoneNumber;
-  Relationship relationship;
+  String name = '';
+  int age = 0;
+  String phoneNumber = '';
+  Relationship? relationship;
 
   @override
   Widget build(BuildContext context) {
@@ -553,9 +272,9 @@ class _AddContactState extends State<AddContact> {
                 children: <Widget>[
                   TextFormField(
                     autofocus: true,
-                    initialValue: "",
+                    initialValue: '',
                     decoration: const InputDecoration(
-                      labelText: "Name",
+                      labelText: 'Name',
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -565,11 +284,10 @@ class _AddContactState extends State<AddContact> {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.number,
-                    initialValue: "",
+                    initialValue: '',
                     maxLength: 3,
-                    maxLengthEnforced: true,
                     decoration: const InputDecoration(
-                      labelText: "Age",
+                      labelText: 'Age',
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -579,9 +297,9 @@ class _AddContactState extends State<AddContact> {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.phone,
-                    initialValue: "",
+                    initialValue: '',
                     decoration: const InputDecoration(
-                      labelText: "Phone",
+                      labelText: 'Phone',
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -593,19 +311,19 @@ class _AddContactState extends State<AddContact> {
                     items: relationshipString.keys.map((Relationship value) {
                       return DropdownMenuItem<Relationship>(
                         value: value,
-                        child: Text(relationshipString[value]),
+                        child: Text(relationshipString[value]!),
                       );
                     }).toList(),
                     value: relationship,
-                    hint: Text("Relationship"),
+                    hint: const Text('Relationship'),
                     onChanged: (value) {
                       setState(() {
                         relationship = value;
                       });
                     },
                   ),
-                  OutlineButton(
-                    child: Text("Submit"),
+                  OutlinedButton(
+                    child: const Text('Submit'),
                     onPressed: onFormSubmit,
                   ),
                 ],
@@ -632,8 +350,17 @@ class _AddContactState extends State<AddContact> {
   // ...
 
   void onFormSubmit() {
-    Box<Contact> contactsBox = Hive.box<Contact>(contactsBoxName);
-    contactsBox.add(Contact(name, age, phoneNumber, relationship));
+    final selected = relationship;
+    if (selected == null) return;
+    final contactsBox = Hive.box<Contact>(contactsBoxName);
+    contactsBox.add(
+      Contact(
+        name: name,
+        age: age,
+        phoneNumber: phoneNumber,
+        relationship: selected,
+      ),
+    );
     Navigator.of(context).pop();
   }
 
@@ -658,20 +385,22 @@ onLongPress: () {
   showDialog(
     context: context,
     barrierDismissible: true,
-    child: AlertDialog(
+    builder: (context) => AlertDialog(
       content: Text(
-        "Do you want to delete ${currentContact.name}?",
+        'Do you want to delete ${currentContact.name}?',
       ),
       actions: <Widget>[
-        FlatButton(
-          child: Text("No"),
+        TextButton(
+          child: const Text('No'),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        FlatButton(
-          child: Text("Yes"),
+        TextButton(
+          child: const Text('Yes'),
           onPressed: () async {
             await box.deleteAt(index);
-            Navigator.of(context).pop();
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
           },
         ),
       ],
