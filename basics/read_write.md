@@ -118,9 +118,9 @@ void main() async {
   box.put('key', 'value');
 
   box.put('key', null);
-  print(box.containsKey('key'));
+  print(box.containsKey('key')); // true
 
   box.delete('key');
-  print(box.containsKey('key'));
+  print(box.containsKey('key')); // false
 }
 ```
