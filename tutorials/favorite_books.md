@@ -2,23 +2,20 @@
 
 [![](https://img.shields.io/badge/author-%40Reprevise-blue)](https://github.com/Reprevise)
 
-In this tutorial we will build a simple app which stores the user's favorite books. It features a list of popular books and data persistance all with Hive in under 100 lines of code!
+In this tutorial we will build a simple app which stores the user's favorite books. It features a list of popular books and data persistence all with Hive in under 100 lines of code!
 
-## Source Code & Live Test
+## Source Code
 
 Here's the source: https://github.com/IO-Design-Team/hive_ce_samples/tree/master/favorite_books
 
-Below you can find the final code and test the app.
-
-(Reload to test persistance)
+Below you can find the final code.
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:hive_ce/hive_ce.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 const favoritesBox = 'favorite_books';
-const List<String> books = [
+const books = [
   'Harry Potter',
   'To Kill a Mockingbird',
   'The Hunger Games',
@@ -41,28 +38,19 @@ const List<String> books = [
 void main() async {
   await Hive.initFlutter();
   await Hive.openBox<String>(favoritesBox);
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-class _MyAppState extends State<MyApp> {
-  Box<String> favoriteBooksBox;
-
-  @override
-  void initState() {
-    super.initState();
-    favoriteBooksBox = Hive.box(favoritesBox);
-  }
+  Box<String> get favoriteBooksBox => Hive.box<String>(favoritesBox);
 
   Widget getIcon(int index) {
     if (favoriteBooksBox.containsKey(index)) {
-      return Icon(Icons.favorite, color: Colors.red);
+      return const Icon(Icons.favorite, color: Colors.red);
     }
-    return Icon(Icons.favorite_border);
+    return const Icon(Icons.favorite_border);
   }
 
   void onFavoritePress(int index) {
@@ -77,24 +65,19 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Favorite Books',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Favorite Books'),
-        ),
-        body: ValueListenableBuilder(
-          valueListenable: favoriteBooksBox.listenable(),
-          builder: (context, Box<String> box, _) {
+        appBar: AppBar(title: const Text('Favorite Books')),
+        body: StreamBuilder(
+          stream: favoriteBooksBox.watch(),
+          builder: (context, snapshot) {
             return ListView.builder(
               itemCount: books.length,
-              itemBuilder: (context, listIndex) {
+              itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(books[listIndex]),
+                  title: Text(books[index]),
                   trailing: IconButton(
-                    icon: getIcon(listIndex),
-                    onPressed: () => onFavoritePress(listIndex),
+                    icon: getIcon(index),
+                    onPressed: () => onFavoritePress(index),
                   ),
                 );
               },
@@ -111,28 +94,16 @@ class _MyAppState extends State<MyApp> {
 
 First we create a new Flutter project:
 
-```
+```shell
 flutter create favorite_books
 ```
 
 ## Dependencies
 
-We can then go ahead and add `hive_ce` and `hive_ce_flutter` to the `pubspec.yaml` file in the project folder:
+We can then go ahead and add `hive_ce` and `hive_ce_flutter` to the project:
 
-```yaml
-name: favorite_books
-
-environment:
-  sdk: ^3.0.0
-
-dependencies:
-  flutter:
-    sdk: flutter
-  hive_ce: ^1.2.0
-  hive_ce_flutter: ^0.3.0+1
-
-flutter:
-  uses-material-design: true
+```shell
+flutter pub add hive_ce hive_ce_flutter
 ```
 
 ## Initialization
@@ -141,7 +112,6 @@ I've defined a `const` variable to hold our `Box` name. Inside the `main()` func
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:hive_ce/hive_ce.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 const favoritesBox = 'favorite_books';
@@ -149,7 +119,7 @@ const favoritesBox = 'favorite_books';
 void main() async {
   await Hive.initFlutter();
   await Hive.openBox<String>(favoritesBox);
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 ```
 
@@ -160,7 +130,7 @@ For this app, we get data from a list of strings but you can easily do the same 
 Each of the items in our list has a secret number called an index that Dart auto assigns for us, remember this for later! The list's index starts counting at 0, not 1!
 
 ```dart
-const List<String> books = [
+const books = [
   // book name, index
   'Harry Potter', // 0
   'To Kill a Mockingbird', // 1
@@ -186,41 +156,33 @@ const List<String> books = [
 
 Here's the `MyApp` class that we call inside of `runApp()`. We have some undefined functions and variables but we'll take care of those later.
 
-The `MyApp` widget has a `Scaffold` which has a `ValueListenableBuilder`. That will rebuild the widget when our box changes.
+The `MyApp` widget has a `Scaffold` which has a `StreamBuilder`. It listens to `box.watch()` and rebuilds the list every time our box changes.
 
 Inside that builder is a `ListView` that holds all of the books in a `ListTile`.
 
 ```dart
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-class _MyAppState extends State<MyApp> {
   // ...
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Favorite Books',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Favorite Books'),
-        ),
-        body: ValueListenableBuilder(
-          valueListenable: favoriteBooksBox.listenable(),
-          builder: (context, Box<String> box, _) {
+        appBar: AppBar(title: const Text('Favorite Books')),
+        body: StreamBuilder(
+          stream: favoriteBooksBox.watch(),
+          builder: (context, snapshot) {
             return ListView.builder(
               itemCount: books.length,
-              itemBuilder: (context, listIndex) {
+              itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(books[listIndex]),
+                  title: Text(books[index]),
                   trailing: IconButton(
-                    icon: getIcon(listIndex),
-                    onPressed: () => onFavoritePress(listIndex),
+                    icon: getIcon(index),
+                    onPressed: () => onFavoritePress(index),
                   ),
                 );
               },
@@ -235,29 +197,24 @@ class _MyAppState extends State<MyApp> {
 
 ## Getting the box
 
-Before we can even do anything with the box, we have to get it. We already opened the box when we initialized Hive. The great thing about Hive is that you can get boxes anywhere, you don't have to pass the box down from widget to widget. Just call `Hive.box()`. It's a synchronous method so no messy `async await` stuff. It reads all of the values from the box and puts them in memory so we can access them.
+Before we can do anything with the box, we have to get it. We already opened the box when we initialized Hive. The great thing about Hive is that you can get boxes anywhere, you don't have to pass the box down from widget to widget. Just call `Hive.box()`. It's a synchronous method so no messy `async await` stuff. All of the values in the box are already in memory so we can access them instantly.
 
 ```dart
-class _MyAppState extends State<MyApp> {
-  Box<String> favoriteBooksBox;
-
-  @override
-  void initState() {
-    super.initState();
-    favoriteBooksBox = Hive.box(favoritesBox);
-  }
+class MyApp extends StatelessWidget {
+  // ...
+  Box<String> get favoriteBooksBox => Hive.box<String>(favoritesBox);
   // ...
 }
 ```
 
 ## Writing to the Box
 
-Inside of `onFavoritePressed`, we react to the favorite icon being pressed inside of the `ListTile` widget. Here, we're checking if our box already contains the book index and delete it if so because you can't favorite a book twice. If it doesn't contain the index, then it will be put inside the Hive box and the list will be rebuilt because we are listening to changes in the box using `ValueListenableBuilder`.
+Inside of `onFavoritePress`, we react to the favorite icon being pressed inside of the `ListTile` widget. Here, we're checking if our box already contains the book index and delete it if so because you can't favorite a book twice. If it doesn't contain the index, then it will be put inside the Hive box and the list will be rebuilt because we are listening to changes in the box using `box.watch()`.
 
 !> In this scenario, the `putAt` function won't work as our `favoriteBooksBox`'s index is different from our book list's index! The `putAt` function is useful for updating data if you know the index it's in inside the Hive box.
 
 ```dart
-class _MyAppState extends State<MyApp> {
+class MyApp extends StatelessWidget {
   // ...
   void onFavoritePress(int index) {
     if (favoriteBooksBox.containsKey(index)) {
@@ -266,11 +223,7 @@ class _MyAppState extends State<MyApp> {
     }
     favoriteBooksBox.put(index, books[index]);
   }
-
-  @override
-  Widget build(BuildContext context) {
-    // ...
-  }
+  // ...
 }
 ```
 
@@ -278,18 +231,18 @@ class _MyAppState extends State<MyApp> {
 
 So, we added items to the box but there's still one more issue! How does the user know if a book is already favorited?
 
-We are going to change the icon and it's color if the book's index number is in the Hive box using the function below.
+We are going to change the icon and its color if the book's index number is in the Hive box using the function below.
 
 All the function does is return an `Icon` widget if our box contains the book index. Remember, the data stored in a Hive box is stored in a key-value store like a `Map`.
 
 ```dart
-class _ListOfBooksState extends State<ListOfBooks> {
+class MyApp extends StatelessWidget {
   // ...
   Widget getIcon(int index) {
     if (favoriteBooksBox.containsKey(index)) {
-      return Icon(Icons.favorite, color: Colors.red);
+      return const Icon(Icons.favorite, color: Colors.red);
     }
-    return Icon(Icons.favorite_border);
+    return const Icon(Icons.favorite_border);
   }
   // ...
 }

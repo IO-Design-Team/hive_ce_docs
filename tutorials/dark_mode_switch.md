@@ -2,34 +2,32 @@
 
 In this tutorial we will build a super simple app. It will have a single switch which can toggle between dark mode and light mode. We will use Hive to persist the switch state.
 
-## Source Code Live Test
+## Source Code
 
-(No repository yet.)
-
-Below you can find the final code and test the app.
-
-(Refresh this page to test persistence)
+Below you can find the final code.
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:hive_ce/hive_ce.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 const darkModeBox = 'darkModeTutorial';
 
 void main() async {
   await Hive.initFlutter();
-  await Hive.openBox(darkModeBox);
-  runApp(MyApp());
+  await Hive.openBox<bool>(darkModeBox);
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: Hive.box(darkModeBox).listenable(),
-      builder: (context, box, widget) {
-        final darkMode = box.get('darkMode', defaultValue: false);
+    final box = Hive.box<bool>(darkModeBox);
+    return StreamBuilder(
+      stream: box.watch(key: 'darkMode'),
+      builder: (context, snapshot) {
+        final darkMode = box.get('darkMode', defaultValue: false)!;
         return MaterialApp(
           themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
           darkTheme: ThemeData.dark(),
@@ -37,9 +35,7 @@ class MyApp extends StatelessWidget {
             body: Center(
               child: Switch(
                 value: darkMode,
-                onChanged: (val) {
-                  box.put('darkMode', !darkMode);
-                },
+                onChanged: (value) => box.put('darkMode', value),
               ),
             ),
           ),
@@ -54,45 +50,32 @@ class MyApp extends StatelessWidget {
 
 First we create a new Flutter project:
 
-```
+```shell
 flutter create dark_mode_switch
 ```
 
 ## Dependencies
 
-Now we need to add Hive to the `pubspec.yaml` file in the project folder:
+Now we add Hive to the project:
 
-```yaml
-name: dark_mode_switch
-
-environment:
-  sdk: ^3.0.0
-
-dependencies:
-  flutter:
-    sdk: flutter
-  hive_ce: ^1.3.0
-  hive_ce_flutter: ^0.3.0+1
-
-flutter:
-  uses-material-design: true
+```shell
+flutter pub add hive_ce hive_ce_flutter
 ```
 
 ## Initialization
 
-Now we can import `hive_ce` and `hive_ce_flutter` to initialize Hive.
+Now we can import `hive_ce_flutter` to initialize Hive. It also exports everything from `hive_ce`.
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:hive_ce/hive_ce.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 const darkModeBox = 'darkModeTutorial';
 
 void main() async {
   await Hive.initFlutter();
-  await Hive.openBox(darkModeBox);
-  runApp(MyApp());
+  await Hive.openBox<bool>(darkModeBox);
+  runApp(const MyApp());
 }
 ```
 
@@ -103,23 +86,16 @@ void main() async {
 The following is the main structure of our app. A Material themed app with a single `Switch` in the center.
 
 ```dart
-import 'package:flutter/material.dart';
-
-void main() async {
-  runApp(MyApp());
-}
-
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       darkTheme: ThemeData.dark(),
       home: Scaffold(
         body: Center(
-          child: Switch(
-            value: false,
-            onChanged: (val) {},
-          ),
+          child: Switch(value: false, onChanged: (value) {}),
         ),
       ),
     );
@@ -136,24 +112,13 @@ Based on the `darkMode` value we set the `themeMode` of the `MaterialApp`.
 When the user toggles the switch, we update the `darkMode` entry in the box.
 
 ```dart
-import 'package:flutter/material.dart';
-import 'package:hive_ce/hive_ce.dart';
-import 'package:hive_ce_flutter/hive_ce_flutter.dart';
-
-const darkModeBox = 'darkModeTutorial';
-
-void main() async {
-  await Hive.initFlutter();
-  await Hive.openBox(darkModeBox);
-  runApp(MyApp());
-}
-
 class MyApp extends StatelessWidget {
-  final box = Hive.box(darkModeBox);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final darkMode = box.get('darkMode', defaultValue: false);
+    final box = Hive.box<bool>(darkModeBox);
+    final darkMode = box.get('darkMode', defaultValue: false)!;
     return MaterialApp(
       themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
       darkTheme: ThemeData.dark(),
@@ -161,9 +126,7 @@ class MyApp extends StatelessWidget {
         body: Center(
           child: Switch(
             value: darkMode,
-            onChanged: (val) {
-              box.put('darkMode', !darkMode);
-            },
+            onChanged: (value) => box.put('darkMode', value),
           ),
         ),
       ),
@@ -178,28 +141,19 @@ When you run the example, you will notice that it does not work as intended. The
 
 ## Refreshing
 
-The last step is to refresh the app when necessary. The easiest way to refresh widgets based on Hive changes is using `box.listenable()` and `ValueListenableBuilder`.
+The last step is to refresh the app when necessary. The easiest way to refresh widgets based on Hive changes is using `box.watch()` with a `StreamBuilder`. Since we only care about the `darkMode` entry, we pass the `key` parameter to only get notified about changes to that key.
 
 ```dart
-import 'package:flutter/material.dart';
-import 'package:hive_ce/hive_ce.dart';
-import 'package:hive_ce_flutter/hive_ce_flutter.dart';
-
-const darkModeBox = 'darkModeTutorial';
-
-void main() async {
-  await Hive.initFlutter();
-  await Hive.openBox(darkModeBox);
-  runApp(MyApp());
-}
-
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: Hive.box(darkModeBox).listenable(),
-      builder: (context, box, widget) {
-        final darkMode = box.get('darkMode', defaultValue: false);
+    final box = Hive.box<bool>(darkModeBox);
+    return StreamBuilder(
+      stream: box.watch(key: 'darkMode'),
+      builder: (context, snapshot) {
+        final darkMode = box.get('darkMode', defaultValue: false)!;
         return MaterialApp(
           themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
           darkTheme: ThemeData.dark(),
@@ -207,9 +161,7 @@ class MyApp extends StatelessWidget {
             body: Center(
               child: Switch(
                 value: darkMode,
-                onChanged: (val) {
-                  box.put('darkMode', !darkMode);
-                },
+                onChanged: (value) => box.put('darkMode', value),
               ),
             ),
           ),
