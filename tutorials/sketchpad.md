@@ -1,37 +1,39 @@
-# Sketchpad Introduction (WIP)
+# Sketchpad Introduction
 
 This tutorial shows you how to make a sketchpad app from scratch! You can draw and Hive will save all of it.
 
-## Source Code & Live Test
+Along the way you will see how to generate an adapter for a class you don't own, like Flutter's `Offset`.
+
+## Source Code
 
 Here's the source: https://github.com/IO-Design-Team/hive_ce_samples/tree/master/sketchpad
 
-Below you can find the final code and test the app.
+## Setup
 
-(Reload to test persistance!)
+First we create a new Flutter project:
+
+```shell
+flutter create sketchpad
+```
+
+## Dependencies
+
+We can then go ahead and add Hive and the tools needed to [generate `TypeAdapters`](/custom-objects/generate_adapters.md):
+
+```shell
+flutter pub add hive_ce hive_ce_flutter dev:hive_ce_generator dev:build_runner
+```
+
+## The model
+
+Every stroke the user draws is a `ColoredPath`. It stores the index of the selected color and the list of points in the stroke.
+
+The model is immutable. We never add points to an existing `ColoredPath`. Instead, a new `ColoredPath` is created with the updated list of points.
+
+`lib/colored_path.dart`:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:hive_ce_flutter/hive_ce_flutter.dart';
-import 'package:hive_ce/hive_ce.dart';
-
-const sketchBox = 'sketchpadBox';
-
-void main() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter(ColoredPathAdapter());
-  await Hive.openBox<ColoredPath>(sketchBox);
-  runApp(DrawApp());
-}
-
-class DrawApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(body: DrawingScreen()),
-    );
-  }
-}
 
 class ColoredPath {
   static const colors = [
@@ -42,71 +44,158 @@ class ColoredPath {
     Colors.amber,
   ];
 
-  static List<Paint> _paints;
-
-  Paint get paint {
-    if (_paints == null) {
-      _paints = [];
-      for (final color in colors) {
-        _paints.add(
-          Paint()
-            ..strokeCap = StrokeCap.round
-            ..isAntiAlias = true
-            ..color = color
-            ..strokeWidth = 3
-            ..style = PaintingStyle.stroke,
-        );
-      }
-    }
-    return _paints[colorIndex];
-  }
-
   final int colorIndex;
+  final List<Offset> points;
 
-  final path = Path();
+  const ColoredPath({required this.colorIndex, required this.points});
 
-  List<Offset> points = [];
+  Color get color => colors[colorIndex];
+}
+```
 
-  ColoredPath(this.colorIndex);
+?> The `color` getter is not in the constructor, so the generated adapter ignores it. Only the fields passed to the constructor are stored.
 
-  void addPoint(Offset point) {
-    if (points.isEmpty) {
-      path.moveTo(point.dx, point.dy);
-    } else {
-      path.lineTo(point.dx, point.dy);
-    }
-    points.add(point);
-  }
+## Generating adapters
+
+Hive needs an adapter for `ColoredPath`, and since `ColoredPath` contains a list of `Offset`s, it needs an adapter for `Offset` too. `Offset` comes from Flutter, but that's no problem. The generator can create adapters for classes from other packages as long as their constructor parameters match their fields.
+
+`lib/hive/hive_adapters.dart`:
+
+```dart
+import 'dart:ui';
+
+import 'package:hive_ce/hive_ce.dart';
+import 'package:sketchpad/colored_path.dart';
+
+@GenerateAdapters([AdapterSpec<ColoredPath>(), AdapterSpec<Offset>()])
+part 'hive_adapters.g.dart';
+```
+
+Now run the build task:
+
+```shell
+dart run build_runner build
+```
+
+!> The generated `hive_adapters.g.yaml` file must be checked into version control. Read more [here](/custom-objects/generate_adapters.md).
+
+## Initialization
+
+We need to initialize Hive, register the generated adapters and open the box.
+
+`lib/main.dart`:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
+import 'package:sketchpad/colored_path.dart';
+import 'package:sketchpad/hive/hive_registrar.g.dart';
+
+const sketchBox = 'sketch';
+
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapters();
+  await Hive.openBox<ColoredPath>(sketchBox);
+  runApp(const DrawApp());
 }
 
-class ColoredPathAdapter extends TypeAdapter<ColoredPath> {
-  @override
-  final typeId = 0;
+class DrawApp extends StatelessWidget {
+  const DrawApp({super.key});
 
   @override
-  ColoredPath read(BinaryReader reader) {
-    final path = ColoredPath(reader.readByte());
-    final len = reader.readUint32();
-    for (var i = 0; i < len; i++) {
-      path.addPoint(Offset(reader.readDouble(), reader.readDouble()));
-    }
-    return path;
-  }
-
-  @override
-  void write(BinaryWriter writer, ColoredPath obj) {
-    writer.writeByte(obj.colorIndex);
-    writer.writeUint32(obj.points.length);
-    for (final point in obj.points) {
-      writer.writeDouble(point.dx);
-      writer.writeDouble(point.dy);
-    }
+  Widget build(BuildContext context) {
+    return const MaterialApp(home: DrawingScreen());
   }
 }
+```
 
+## Painting a path
+
+The `PathPainter` draws a single `ColoredPath` on a canvas by connecting its points with lines.
+
+```dart
+class PathPainter extends CustomPainter {
+  final ColoredPath path;
+
+  const PathPainter(this.path);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final points = path.points;
+    if (points.isEmpty) return;
+
+    final linePath = Path()..moveTo(points.first.dx, points.first.dy);
+    for (final point in points.skip(1)) {
+      linePath.lineTo(point.dx, point.dy);
+    }
+
+    final paint = Paint()
+      ..strokeCap = StrokeCap.round
+      ..isAntiAlias = true
+      ..color = path.color
+      ..strokeWidth = 3
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawPath(linePath, paint);
+  }
+
+  @override
+  bool shouldRepaint(PathPainter oldDelegate) => true;
+}
+```
+
+## Drawing
+
+The `DrawingArea` widget handles the user's gestures. While the user is drawing, the current stroke is only kept in the widget's state. When the user lifts their finger, the finished `ColoredPath` is added to the box.
+
+```dart
+class DrawingArea extends StatefulWidget {
+  final int selectedColorIndex;
+
+  const DrawingArea(this.selectedColorIndex, {super.key});
+
+  @override
+  State<DrawingArea> createState() => _DrawingAreaState();
+}
+
+class _DrawingAreaState extends State<DrawingArea> {
+  var points = <Offset>[];
+
+  ColoredPath get path =>
+      ColoredPath(colorIndex: widget.selectedColorIndex, points: points);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onPanStart: (details) => addPoint(details.localPosition),
+      onPanUpdate: (details) => addPoint(details.localPosition),
+      onPanEnd: (details) {
+        Hive.box<ColoredPath>(sketchBox).add(path);
+        setState(() => points = []);
+      },
+      child: CustomPaint(size: Size.infinite, painter: PathPainter(path)),
+    );
+  }
+
+  void addPoint(Offset point) => setState(() => points = [...points, point]);
+}
+```
+
+!> Never modify an object after it has been written to a box. That's why `addPoint()` creates a new list instead of adding to the existing one.
+
+## The drawing screen
+
+The `DrawingScreen` puts everything together. It uses a `StreamBuilder` with `box.watch()` to redraw the saved paths whenever the box changes.
+
+Below the canvas is a row of color circles to select the stroke color, a button to clear the sketch, and a button to undo the last stroke. Since strokes are stored with auto-increment keys, the last stroke is always at index `box.length - 1`.
+
+```dart
 class DrawingScreen extends StatefulWidget {
+  const DrawingScreen({super.key});
+
   @override
-  _DrawingScreenState createState() => _DrawingScreenState();
+  State<DrawingScreen> createState() => _DrawingScreenState();
 }
 
 class _DrawingScreenState extends State<DrawingScreen> {
@@ -114,57 +203,56 @@ class _DrawingScreenState extends State<DrawingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: Stack(
-            children: <Widget>[
-              ValueListenableBuilder(
-                valueListenable: Hive.box<ColoredPath>(sketchBox).listenable(),
-                builder: drawPathsFromBox,
+    final box = Hive.box<ColoredPath>(sketchBox);
+    return Scaffold(
+      body: SafeArea(
+        child: StreamBuilder(
+          stream: box.watch(),
+          builder: (context, snapshot) => Column(
+            children: [
+              Expanded(
+                child: Stack(
+                  children: [
+                    for (final path in box.values)
+                      CustomPaint(
+                        size: Size.infinite,
+                        painter: PathPainter(path),
+                      ),
+                    DrawingArea(selectedColorIndex),
+                  ],
+                ),
               ),
-              DrawingArea(selectedColorIndex),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  for (var i = 0; i < ColoredPath.colors.length; i++)
+                    buildColorCircle(i),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: box.isEmpty ? null : box.clear,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.undo),
+                    onPressed: box.isEmpty
+                        ? null
+                        : () => box.deleteAt(box.length - 1),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            for (var i = 0; i < ColoredPath.colors.length; i++)
-              buildColorCircle(i),
-            ClearButton(),
-            UndoButton(),
-          ],
-        ),
-        SizedBox(height: 20),
-      ],
-    );
-  }
-
-  Widget drawPathsFromBox(
-      BuildContext context, Box<ColoredPath> box, Widget child) {
-    return Stack(
-      children: <Widget>[
-        for (final path in box.values)
-          CustomPaint(
-            size: Size.infinite,
-            painter: PathPainter(path),
-          ),
-      ],
+      ),
     );
   }
 
   Widget buildColorCircle(int colorIndex) {
     final selected = selectedColorIndex == colorIndex;
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedColorIndex = colorIndex;
-        });
-      },
+      onTap: () => setState(() => selectedColorIndex = colorIndex),
       child: ClipOval(
         child: Container(
-          padding: const EdgeInsets.only(bottom: 16.0),
           height: selected ? 50 : 36,
           width: selected ? 50 : 36,
           color: ColoredPath.colors[colorIndex],
@@ -173,139 +261,8 @@ class _DrawingScreenState extends State<DrawingScreen> {
     );
   }
 }
-
-class DrawingArea extends StatefulWidget {
-  final int selectedColorIndex;
-
-  DrawingArea(this.selectedColorIndex);
-
-  @override
-  _DrawingAreaState createState() => _DrawingAreaState();
-}
-
-class _DrawingAreaState extends State<DrawingArea> {
-  var path = ColoredPath(0);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanUpdate: (details) {
-        addPoint(details.globalPosition);
-      },
-      onPanStart: (details) {
-        path = ColoredPath(widget.selectedColorIndex);
-        addPoint(details.globalPosition);
-      },
-      onPanEnd: (details) {
-        Hive.box<ColoredPath>(sketchBox).add(path);
-        setState(() {
-          path = ColoredPath(0);
-        });
-      },
-      child: CustomPaint(
-        size: Size.infinite,
-        painter: PathPainter(path),
-      ),
-    );
-  }
-
-  void addPoint(Offset point) {
-    final renderBox = context.findRenderObject() as RenderBox;
-    setState(() {
-      path.addPoint(renderBox.globalToLocal(point));
-    });
-  }
-}
-
-class PathPainter extends CustomPainter {
-  final ColoredPath path;
-
-  PathPainter(this.path);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas.drawPath(path.path, path.paint);
-  }
-
-  @override
-  bool shouldRepaint(PathPainter oldDelegate) => true;
-}
-
-class ClearButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: Hive.box<ColoredPath>(sketchBox).listenable(),
-      builder: (context, box, _) {
-        return IconButton(
-          icon: Icon(Icons.delete),
-          onPressed: box.length == 0 ? null : () => box.clear(),
-        );
-      },
-    );
-  }
-}
-
-class UndoButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: Hive.box<ColoredPath>(sketchBox).listenable(),
-      builder: (context, box, _) {
-        return IconButton(
-          icon: Icon(Icons.undo),
-          onPressed:
-              box.length == 0 ? null : () => box.deleteAt(box.length - 1),
-        );
-      },
-    );
-  }
-}
 ```
 
-## Setup
+## The End
 
-First we create a new Flutter project:
-
-```
-flutter create sketchpad
-```
-
-## Dependencies
-
-We can then go ahead and add `hive_ce` and `hive_ce_flutter` to the `pubspec.yaml` file in the project folder:
-
-```yaml
-name: sketchpad
-
-environment:
-  sdk: ^3.0.0
-
-dependencies:
-  flutter:
-    sdk: flutter
-  hive_ce: ^1.3.0
-  hive_ce_flutter: ^0.3.0+1
-
-flutter:
-  uses-material-design: true
-```
-
-## Initialization
-
-We need to initialize Hive and the `TypeAdapters`.
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:hive_ce_flutter/hive_ce_flutter.dart';
-import 'package:hive_ce/hive_ce.dart';
-
-const sketchBox = 'sketchpadBox';
-
-void main() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter(ColoredPathAdapter());
-  await Hive.openBox<ColoredPath>(sketchBox);
-  runApp(DrawApp());
-}
-```
+Congratulations, you have built a sketchpad that remembers everything you draw. Try adding more colors or a stroke width option!

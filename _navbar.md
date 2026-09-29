@@ -1,4 +1,4 @@
 - [GitHub](https://github.com/IO-Design-Team/hive_ce)
-<!-- - [Samples](https://github.com/IO-Design-Team/hive_ce_samples) -->
+- [Samples](https://github.com/IO-Design-Team/hive_ce_samples)
 - [Pub.dev](https://pub.dev/packages/hive_ce)
 - [Ask for Help](https://github.com/IO-Design-Team/hive_ce/issues/new?assignees=&labels=question&template=question.md&title=)
