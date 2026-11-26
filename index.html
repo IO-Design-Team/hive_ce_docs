@@ -39,8 +39,23 @@
       --accent: #0AC7EF !important;
     }
 
+    .sidebar > h1 > a {
+      display: inline-block;
+    }
+
+    .sidebar > h1 img {
+      display: block;
+      max-width: 220px;
+      width: 100%;
+      height: auto;
+    }
+
+    html[style*="color-scheme: dark"] .sidebar > h1 > a {
+      background: url('https://raw.githubusercontent.com/IO-Design-Team/hive_ce/main/.github/logo_transparent_dark.svg') center / contain no-repeat;
+    }
+
     html[style*="color-scheme: dark"] .sidebar > h1 img {
-      filter: invert(1) hue-rotate(180deg) brightness(1.2);
+      opacity: 0;
     }
   </style>
 </head>
@@ -58,7 +73,7 @@
       homepage: 'home.md',
       themeColor: '#0AC7EF',
       notFoundPage: true,
-      logo: 'assets/logo.svg',
+      logo: 'https://raw.githubusercontent.com/IO-Design-Team/hive_ce/main/.github/logo_transparent.svg',
       ga: 'UA-148376435-1',
       pagination: {
         crossChapter: true
