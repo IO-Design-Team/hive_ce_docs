@@ -47,6 +47,7 @@
   - [Logging](/more/logging.md)
   - [Frequently Asked Questions](/more/faq.md)
   - [Limitations](/more/limitations.md)
+  - [Community tools](/more/community_tools.md)
 
 - Deprecated
   - [Deprecation Policy](/deprecated/deprecation_policy.md)
